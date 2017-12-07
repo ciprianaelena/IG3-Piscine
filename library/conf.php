@@ -5,7 +5,7 @@
 		// Salt utilisé par sécurité
 		public static $salt	= '';
 		// Est-ce que le site est en développement 'true' ou ou non 'false'
-		public static $debug = 'true';
+		public static $debug = true;
 
 		// Nom de l'hôte de la base de donnée
 		public static $hostname = '';
