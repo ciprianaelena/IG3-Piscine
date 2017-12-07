@@ -1,15 +1,15 @@
 <?php
 	class Model {
 
-		private $var;
+		protected $var;
 
 		// Getter generic
-		function __get($key) {
+		public function __get($key) {
 			return $this->var[$key];
 		}
 
 		// Setter generic
-  		function __set($key, $value) {
+  		public function __set($key, $value) {
   			$this->var[$key] = $value;
   		}
 	}

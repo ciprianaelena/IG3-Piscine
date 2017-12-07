@@ -92,6 +92,7 @@
 				$password = Usefull::crypt($password);
 				// Ajoute l'utilisateur dans la base de données
 				ModelUser::registered($login, $password, $email);
+
 			} catch (PDOException $exception) {
 				if (Conf::$debug) {
 					echo $exception->getMessage();
@@ -108,6 +109,14 @@
 			$controller = 'user';
 			$view       = 'connect';
 			$title      = 'Connection';
+
+
+			$where = 'idUser = :whereUserID';
+			$values = array(
+				'whereUserID' => 99
+ 			);
+
+			ModelUser::delete(ModelUser::$className, $where, $values);
 
 			require_once File::buildPath(array('view', 'view.php'));	
 		}
@@ -142,9 +151,9 @@
 			}
 
 			// Démarre la session
-			$_SESSION['id']    = $user->idUser;
-			$_SESSION['login'] = $user->login;
-			$_SESSION['admin'] = $user->admin;
+			$_SESSION['id']    = $user[0]->idUser;
+			$_SESSION['login'] = $user[0]->login;
+			$_SESSION['admin'] = $user[0]->admin;
 		}
 		
 		// Déconnecte un utilisateur
