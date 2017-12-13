@@ -4,7 +4,7 @@
 	</p>
 <?php endif; ?>
 
-<form method="post" action="index.php?controller=user&action=registered">
+<form method="post" action="index.php?controller=user&action=actionRegister">
 	<p><input type="text" placeholder="Login" 
 		pattern=".{3,}" title="The login must be at least 3 characters long" maxlength=20 
 		name="login" value="<?php if (isset($login)): echo $login; endif;?>" required /></p>

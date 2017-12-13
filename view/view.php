@@ -18,12 +18,12 @@
 	<body>
 		<header>
 			<ul>
-				<li><a href="/index.php?controller=user&action=connect">Home</a></li>
+				<li><a href="/index.php?controller=user&action=viewConnect">Home</a></li>
 				<?php if (Usefull::isConnected()): ?>
-					<li><a href="/index.php?controller=user&action=disconnect">Disconnect</a></li>
+					<li><a href="/index.php?controller=user&action=actionDisconnect">Disconnect</a></li>
 				<?php else: ?>
-					<li><a href="/index.php?controller=user&action=connect">Log in</a></li>
-					<li><a href="/index.php?controller=user&action=register">Register</a></li>
+					<li><a href="/index.php?controller=user&action=viewConnect">Log in</a></li>
+					<li><a href="/index.php?controller=user&action=viewRegister">Register</a></li>
 				<?php endif ?>
 			</ul>
 		</header>
