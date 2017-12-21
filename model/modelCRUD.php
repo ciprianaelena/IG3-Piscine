@@ -4,27 +4,63 @@
 
 	class ModelCRUD extends Model {
 
-		// Prefix de la table si il y en a
-		protected static $tablePrefix = '';
-		// Nom de la classe
-		public static $className = 'model_has_no_class_name';
-		// Nom de la table
-		protected static $tableName = 'model_has_no_table_name';
+		static protected $tableName;
+		static protected $className;
+		static protected $shema;
+		static protected $primaryKey;
 
-		// Fonction de création
-		// className est le nom du modele, par exemple 'ModelUser'
-		// values est un tableau associatif de nom de colonnes => valeurs
-		public static function create($className, $values) {
-			// Récupère le nom complet de la table
-			$tableFullName = $className::$tablePrefix . $className::$tableName;
-			
-			// Créer la requête SQL
-			$sqlInsert = 'INSERT INTO ' . $tableFullName . '(';
+		public static function getTableName() {
+			return static::$tableName;
+		}
+
+		public static function getClassName() {
+			return static::$className;
+		}
+
+		public static function getShema() {
+			return static::$shema;
+		}
+
+		public static function getPrimaryKey() {
+			return static::$primaryKey;
+		}
+
+		public static function updateShema() {
+			$query = Bdd::$pdo->prepare('DESCRIBE ' . static::getTableName());
+			$query->execute();
+			static::$shema = $query->fetchAll(PDO::FETCH_COLUMN | PDO::FETCH_GROUP);
+		}
+
+		public static function updatePrimaryKey() {
+			$sql = 'SHOW KEYS FROM ' . static::getTableName() . ' WHERE Key_name = :primary';
+			$values = array(
+				'primary' => 'PRIMARY'
+			);
+			$query = Bdd::$pdo->prepare($sql);
+			$query->execute($values);
+			static::$primaryKey = $query->fetchAll()[0]['Column_name'];
+		}
+
+		public static function registerModel() {
+			static::updateShema();
+			static::updatePrimaryKey();
+		}
+
+		public function create() {
+			$sqlInsert = 'INSERT INTO ' . static::getTableName() . '(';
 			$sqlValues = ' VALUES (';
+			$shema = static::getShema();
+			$values = array();
 
-			foreach ($values as $columnName => $columnValue) {
-				$sqlInsert = $sqlInsert . $columnName . ', ';
-				$sqlValues = $sqlValues . ':' . $columnName . ', ';
+			echo(static::getPrimaryKey());
+
+			foreach ($this->data as $columnName => $columnValue) {
+				// Don't add column wich aren't in the database or are part of the key
+				if (isset($shema[$columnName]) && $columnName != static::getPrimaryKey()) {
+					$sqlInsert = $sqlInsert . $columnName . ', ';
+					$sqlValues = $sqlValues . ':' . $columnName . ', ';
+					$values[$columnName] = $columnValue;
+				}
 			}
 			$sqlInsert = substr($sqlInsert, 0, -2) . ')';
 			$sqlValues = substr($sqlValues, 0, -2) . ')';
@@ -34,55 +70,51 @@
 			$query->execute($values);
 		}
 
-		// Fonction de lecture
-		// className est le nom du modele, par exemple 'ModelUser'
-		// values est un tableau associatif de nom de colonnes => valeurs
-		// conditions est une chaine de caractère de conditions SQL par exemple 'login = :login AND password = :pass'
-		public static function read($className, $where, $values) {
-			// Récupère le nom complet de la table
-			$tableFullName = $className::$tablePrefix . $className::$tableName;
-
-			$sql = 'SELECT * FROM ' . $tableFullName . ' WHERE ' . $where;
+		// Read
+		// where is a SQL string, for instance 'login = :login AND password = :pass'
+		// values is a dictionnary of column name => value
+		public static function read($where, $values) {
+			$sql = 'SELECT * FROM ' . static::getTableName() . ' WHERE ' . $where;
 
 			$query = Bdd::$pdo->prepare($sql);
 			$query->execute($values);
-			return $query->fetchAll(PDO::FETCH_CLASS, $className);
+			return $query->fetchAll(PDO::FETCH_CLASS, static::getClassName());
 		}
 
-		// Lit la première ligne vérifiant les conditions. Si aucune n'existe renvoi faux. Utilise la fonction read.
-		public static function readOrFalse($className, $where, $values) {
-			$result = ModelCRUD::read($className, $where, $values);
+		// Read the first database entry mathcing condition. If none was found return false
+		public static function readOrFalse($where, $values) {
+			$result = self::read($where, $values);
 			if (empty($result)) {
 				return false;
 			}
 			return $result;
 		}
 
-		// Fonction de mise à jour
-		// className est le nom du modele, par exemple 'ModelUser' 
-		// set est une chaine de caractère de type 'login = :newLogin'
-		// where est une chaine de caractère de type 'login = :oldLogin'
-		// values est un tableau associatif du type { 'newLogin' => 'Nouveau login', 'oldLogin' => 'Ancien login'}
-		public static function update($className, $set, $where, $values) {
-			// Récupère le nom complet de la table
-			$tableFullName = $className::$tablePrefix . $className::$tableName;
+		public function update() {
+			$sql = 'UPDATE ' . static::getTableName() . ' SET ' . $set . ' WHERE ' . static::getPrimaryKey() . ' == :primaryKey';
+			$sqlSet = ' SET (';
+			$values = array(
+				'primaryKey' => static::getPrimaryKey()
+			);
 
-			$sql = 'UPDATE ' . $tableFullName . ' SET ' . $set . ' WHERE ' . $where;
+			foreach ($this->data as $columnName => $columnValue) {
+				if (isset($shema[$columnName])) {
+					$sqlSet = $sqlSet . $columnName . ', ';
+					$values[$columnName] = $columnValue;
+				}
+			}
 
 			$query = Bdd::$pdo->prepare($sql);
 			$query->execute($values);
 		}
 
-		// Fonction de suppression
-		public static function delete($className, $where, $values) {
-			// Récupère le nom complet de la table
-			$tableFullName = $className::$tablePrefix . $className::$tableName;
-
-			$sql = 'DELETE FROM ' . $tableFullName . ' WHERE ' . $where;
+		public function delete() {
+			$sql = 'DELETE FROM ' . static::getTableName() . ' WHERE ' . static::getPrimaryKey() . ' == :primaryKey';
 
 			$query = Bdd::$pdo->prepare($sql);
-			$query->execute($values);
+			$query->execute(array(
+				'primaryKey' => static::getPrimaryKey()
+			));
 		}
 	}
-
 ?>

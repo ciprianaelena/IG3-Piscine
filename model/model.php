@@ -1,16 +1,27 @@
 <?php
 	class Model {
 
-		protected $var;
+		protected $data = array();
 
-		// Getter generic
 		public function __get($key) {
-			return $this->var[$key];
+			return $this->data[$key];
 		}
 
-		// Setter generic
-  		public function __set($key, $value) {
-  			$this->var[$key] = $value;
-  		}
+		public function __set($key, $value) {
+			$this->data[$key] = $value;
+		}
+
+		// Generic setter of dictionnary
+		public function setArray($array) {
+			foreach ($array as $key => $value) {
+				$this->data[$key] = $value;
+			}
+		}
+
+		public function echo($key) {
+			if (isset($this->data[$key])) {
+				echo $this->data[$key];
+			}
+		}
 	}
 ?>

@@ -4,117 +4,106 @@
 
 	class ModelUser extends ModelCRUD {
 
-		public static $className = 'ModelUser';
-		protected static $tableName = 'user';
+		static protected $className = 'ModelUser';
+		static protected $tableName = 'user';
 
-		// Retourne un utilisateur par son id
-		public static function getUserID($idUser) {
+		// Return a user by is id, if none was found return false
+		public static function getUserByID($idUser) {
 			$where = 'idUser = :idUser';
 			$values = array('idUser' => $idUser);
-			return ModelUser::readOrFalse(ModelUser::$className, $where, $values);
+			return self::readOrFalse($where, $values);
 		}
 
-		// Retourne un utilisateur par son login ou false si aucun utilisateur n'est trouvé
-		public static function getUserLogin($login) {
+		// Return a user by is login, if none was found return false
+		public static function getUserByLogin($login) {
 			$where = 'login = :login';
 			$values = array('login' => $login);
-			return ModelUser::readOrFalse(ModelUser::$className, $where, $values);
+			return self::readOrFalse($where, $values);
 		}
 
-		// Retourne un utilisateur par sont email
-		public static function getUserEmail($email) {
+		// Return a user by is email, if none was found return false
+		public static function getUserByEmail($email) {
 			$where = 'email = :email';
 			$values = array('email' => $email);
-			return ModelUser::readOrFalse(ModelUser::$className, $where, $values);
+			return self::readOrFalse($where, $values);
 		}
 
-		// Vérifie les conditions d'inscriptions
-		public static function checkRegister($login, $password, $passwordRetype, $email) {
-			// Le login est trop court
-			if (strlen($login) < 3) {
+		// Check register conditions
+		public function checkRegister() {
+			// Login is too short
+			if (strlen($this->login) < 3) {
 				throw new Exception('The login must be at least 3 characters long');
 			}
 
-			// Le login est trop long
-			if (strlen($login) > 20) {
+			// Login is too long
+			if (strlen($this->login) > 20) {
 				throw new Exception('The login must be less than 20 charcters long');
 			}
 
-			// Le mot de passe est trop court
-			if (strlen($password) < 4) {
+			// Password is too short
+			if (strlen($this->password) < 4) {
 				throw new Exception('The password must be at least 4 characters long');
 			}
 
-			// Le mot de passe est trop long
-			if (strlen($password) > 32) {
+			// Password is too long
+			if (strlen($this->password) > 32) {
 				throw new Exception('The password must be less than 32 charcters long');
 			}
 
-			// Les mots de passe ne correspondent pas
-			if ($password != $passwordRetype) {
+			// Password missmatch
+			if ($this->password != $this->passwordRetype) {
 				throw new Exception('Passwords missmatch');
 			}
 
-			// Vérifie que le nom d'utilisateur n'est pas déjà utilisé
-			if (ModelUser::getUserLogin($login)) {
+			// Login is unavailable
+			if (ModelUser::getUserByLogin($this->login)) {
 				throw new Exception('This login is already used');
 			}
 
-			if (strlen($email) > 300) {
+			// Email is too long
+			if (strlen($this->email) > 300) {
 				throw new Exception('The email must be less than 300 chaarcters long');
 			}
 
-			// Vérifie que l'adresse email est valide
-			if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			// Email format is incorrect
+			if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
 				throw new Exception('The email format is invalid');
 			}
 
-			// Vérifie que l'adresse email n'est pas déjà utilisé
-			if (ModelUser::getUserEmail($email)) {
+			// Email is already used
+			if (ModelUser::getUserByEmail($this->email)) {
 				throw new Exception('The email adress is already used by another account');
 			}
 
 			return true;
 		}
 
-		// Enregistre un utilisateur dans la base de données
-		public static function register($login, $password, $email) {
-			// On crypte le mot de passe
-			$password = Usefull::crypt($password);
-			// Génére une URL d'activation
-			$activationURL = Usefull::generateRandomHex();
+		// Try to find a user using this login / password, return false if none was found
+		public function checkConnect() {
+			$password = Usefull::crypt($this->password);
 
-			$args = array(
-				'login' => $login,
-				'password' => $password,
-				'email' => $email,
-				'activationURL' => $activationURL
-			);
-
-			ModelUser::create(ModelUser::$className, $args);
-		}
-
-		// Vérifie si il est possible de trouver un utilisateur avec ce login / mot de passe
-		public static function checkConnect($login, $password) {
-			// On crypte le mot de passe
-			$password = Usefull::crypt($password);
-
-			// Query
 			$where = 'login = :login AND password = :password';
 			$values = array(
-				'login' => $login,
-				'password' => $password
+				'login' => $this->login,
+				'password' => $this->password
 			);
 
-			return ModelUser::readOrFalse(ModelUser::$className, $where, $values);
+			return static::readOrFalse($where, $values);
 		}
 
-		// Connecte réellement l'utilisateur
-		public static function connect($user) {
-			// Démarre la session
-			$_SESSION['id']    = $user->idUser;
-			$_SESSION['login'] = $user->login;
-			$_SESSION['admin'] = $user->admin;
+		public function connect() {
+			$_SESSION['user'] = $this;
+		}
+
+		public static function disconnect() {
+			if (static::isConnected()) {
+				unset($_SESSION['user']);
+				session_unset();
+				session_destroy();
+				setcookie(session_name(), '', time() - 1);
+			}
 		}
 	}
+
+	ModelUser::registerModel();
 ?>

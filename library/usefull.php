@@ -16,21 +16,6 @@
 			return $hex;
 		}
 
-		// Vérifie que l'utilisateur est connecté
-		public static function isConnected() {
-			return isset($_SESSION['id']);
-		}
-
-		// Vérifie que le login est bien l'utilisateur connecté
-		public static function isUser($idUser) {
-			return (isset($_SESSION['id']) && ($_SESSION['id'] == $idUser));
-		}
-
-		// Vérifie si l'utilisateur connecté est admin
-		public static function isAdmin() {
-			return (isset($_SESSION['admin']) && $_SESSION['admin']);
-		}
-
 		// Envoi un mail de $sender à $receiver
 		public static function mailto($sender, $receiver, $username, $subject, $message) {
 			$headers  = "From: \"" . $username . "\"<". $sender .">\n";

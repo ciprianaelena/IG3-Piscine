@@ -3,70 +3,61 @@
 
 	class ControllerUser {
 
-		// Affiche un formulaire d'inscription
+		// Display a registering form
 		public static function viewRegister() {
 			$controller = 'user';
-			$view       = 'register';
-			$title      = 'Register';
+			$view = 'register';
+			$title = 'Register';
 
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
-		// Enregistre l'utilisateur dans la base de données
+		// Register a user in the database
 		public static function actionRegister() {
-			$login          = $_POST['login'];
-			$password       = $_POST['password'];
-			$passwordRetype = $_POST['passwordRetype'];
-			$email          = $_POST['email'];
-
 			$controller = 'user';
-			$view       = 'register';
-			$title      = 'Register';
 			
-			// Vérifie que les informations soit valides
+			$user = new ModelUser();
+			$user->setArray($_POST);
+			$user->activationURL = Usefull::generateRandomHex();
+
 			try {
-				ModelUser::checkRegister($login, $password, $passwordRetype, $email);
+				$valid = $user->checkRegister();
 			} catch (Exception $e) {
+				$view = 'register';
+				$title = 'Register';
 				$error = $e->getMessage();
 				require_once File::buildPath(array('view', 'view.php'));
 				return false;
 			}
 			
-			// Ajoute l'utilisateur dans la base de données
-			try {
-				ModelUser::register($login, $password, $email);
-			} catch (PDOException $exception) {
-				if (Conf::$debug) {
-					echo $exception->getMessage();
-					die();
-				}
-				$error = 'Sorry we can\'t register you now, try again later!';
-				require_once File::buildPath(array('view', 'view.php'));
-				return false;
-			}
+			// Add the user in the database
+			$user->create();
+			$view = 'connect';
+			$title = 'Connection';
+			$info = 'Register successfull';
+			require_once File::buildPath(array('view', 'view.php'));
 		}
 
-		// Affiche un formulaire de connexion
+		// Display a login form
 		public static function viewConnect() {
 			$controller = 'user';
-			$view       = 'connect';
-			$title      = 'Connection';
+			$view = 'connect';
+			$title = 'Connection';
 
-			require_once File::buildPath(array('view', 'view.php'));	
+			require_once File::buildPath(array('view', 'view.php'));
 		}
 
-		// Vérifie la connexion
+		// Try to connect a user
 		public static function actionConnect() {
-			$login    = $_POST['login'];
-			$password = $_POST['password'];
-
 			$controller = 'user';
-			$view       = 'connect';
-			$title      = 'Connect';
+			$view = 'connect';
+			$title = 'Connect';
 
-			// Essaye de connecter l'utilisateur
+			$user = new ModelUser();
+			$user->setArray($_POST);
+
 			try {
-				$user = ModelUser::checkConnect($login, $password);
+				$userFound = $user->checkConnect();
 			} catch (PDOException $exception) {
 				if (Conf::$debug) {
 					echo $exception->getMessage();
@@ -77,26 +68,28 @@
 				return false;
 			}
 
-			// On n'a pas trouvé l'utilisateur
-			if (!$user) {
+			// User not found
+			if (!$userFound) {
 				$error = 'Login or password is incorrect!';
 				require_once File::buildPath(array('view', 'view.php'));
 				return false;
 			}
 
-			// Sinon on connecte l'utilisateur
-			ModelUser::connect($user[0]);
+			// Else, connect the user
+			$user = $userFound[0];
+			$user->connect();
+			$info = 'Connected';
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 		
-		// Déconnecte un utilisateur
+		// Disconnect a user
 		public static function actionDisconnect() {
-			// Vérifie que l'utilisateur est déconnecté
-			if (Usefull::isConnected()) {
-				session_unset();
-				session_destroy();
-				setcookie(session_name(), '', time() - 1);
-			}
+			$controller = 'user';
+			$view = 'connect';
+			$title = 'Connection';
+			$info = 'Disconnected';
+			ModelUser::disconnect();
+			require_once File::buildPath(array('view', 'view.php'));
 		}
 	}
 ?>

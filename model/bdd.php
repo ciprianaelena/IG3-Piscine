@@ -3,7 +3,7 @@
 
 		public static $pdo;
 
-		// Connecte à la base de donnée
+		// Connect to the database
 		public static function connect() {
 			$hostname = Credentials::$databaseHostname;
 		    $database = Credentials::$databaseName;
@@ -11,7 +11,7 @@
 		    $password = Credentials::$databasePassword;
 
 			self::$pdo = new PDO("mysql:host=$hostname;dbname=$database;charset=utf8", $login, $password);
-			// On active le mode d'affichage des erreurs, et le lancement d'exception en cas d'erreur
+			// Enable errors display and exception throws in case of errors
 			self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
 	}

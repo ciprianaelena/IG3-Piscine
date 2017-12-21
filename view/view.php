@@ -4,12 +4,12 @@
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta charset="UTF-8">
-		<!-- Reset le style par défaut pour tous les navigateur -->
+		<!-- Reset css style -->
 		<link href="<?php echo File::buildPath(array('style', 'reset.css')) ?>" rel="stylesheet">
 		<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-		<!-- Applique le style globale du site -->
+		<!-- Apply global css style -->
 		<link href="<?php echo File::buildPath(array('style', 'style.css')) ?>" rel="stylesheet">
-		<!-- Inclus JQuery -->
+		<!-- jQuery -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 		<title><?php echo $title; ?></title>
@@ -19,7 +19,8 @@
 		<header>
 			<ul>
 				<li><a href="/index.php?controller=user&action=viewConnect">Home</a></li>
-				<?php if (Usefull::isConnected()): ?>
+				<?php if (Credentials::isConnected()): ?>
+					<li><a href="/index.php?controller=editeur&action=viewCreateUpdateEditeur">Editeur</a></li>
 					<li><a href="/index.php?controller=user&action=actionDisconnect">Disconnect</a></li>
 				<?php else: ?>
 					<li><a href="/index.php?controller=user&action=viewConnect">Log in</a></li>
@@ -37,7 +38,6 @@
 				?>
 			</div>
 		</main>
-
 
 		<footer>
 

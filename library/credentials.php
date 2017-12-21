@@ -11,5 +11,10 @@
 		// Mot de passe de la base de donnée
 		public static $databasePassword = '';
 
+		// Return true if the current user is connected
+		public static function isConnected() {
+			return isset($_SESSION['user']);
+		}
+
 	}
 ?>
