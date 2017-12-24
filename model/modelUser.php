@@ -96,7 +96,7 @@
 		}
 
 		public static function disconnect() {
-			if (static::isConnected()) {
+			if (isConnected()) {
 				unset($_SESSION['user']);
 				session_unset();
 				session_destroy();
@@ -104,6 +104,4 @@
 			}
 		}
 	}
-
-	ModelUser::registerModel();
 ?>

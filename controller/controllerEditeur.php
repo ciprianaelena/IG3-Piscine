@@ -3,22 +3,92 @@
 
 	class ControllerEditeur {
 
+		// Affiche tous les éditeurs
+		public static function readAll($info = '', $error = '') {
+			$controller = 'editeur';
+			$view = 'readAll';
+			$title = 'Liste des éditeurs';
+
+			$listEditeur = ModelEditeur::read();
+			require_once File::buildPath(array('view', 'view.php'));
+		}
+
 		// Affiche la page de création d'éditeur
-		public static function viewCreateUpdateEditeur() {
+		public static function viewCreate() {
+			$controller = 'editeur';
+			$view = 'create';
+			$title = 'Créer un editeur';
+
+			require_once File::buildPath(array('view', 'view.php'));
+		}
+		
+		public static function viewUpdate() {
 			$controller = 'editeur';
 			$view = 'update';
-			$title = 'Créer ou modifier un editeur';
+			$title = 'Modifier un editeur';
+
+			if (isset($_GET['idEditeur'])) {
+				$where = 'idEditeur = :idEditeur';
+				$values = array('idEditeur' => $_GET['idEditeur']);
+				$editeur = ModelEditeur::readOrFalse($where, $values);
+				if (!$editeur) {
+					unset($editeur);
+				} else {
+					$editeur = $editeur[0];
+				}
+			}
 
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
+		public static function actionCreate() {
+			$controller = 'editeur';
+			$editeur = new ModelEditeur();
+			if (isset($_POST['actifEditeur'])) {
+				$_POST['actifEditeur'] = 1;
+			} else {
+				$_POST['actifEditeur'] = 0;
+			}
+			$editeur->setArray($_POST);
+
+			// Le nom d'éditeur est obligatoire
+			if (!isset($editeur->nomEditeur) && $editeur->nomEditeur == '') {
+				$view = 'create';
+				$error = 'Le nom d\'éditeur est obligatoire';
+				require_once File::buildPath(array('view', 'view.php'));
+				return false;
+			}
+
+			$nomEditeurUnique = $editeur->isNomEditeurUnique();
+
+			if (!$nomEditeurUnique) {
+				$view = 'create';
+				$title = 'Créer un editeur';
+				$error = 'Un éditeur possède déjà ce nom';
+				require_once File::buildPath(array('view', 'view.php'));
+				return false;
+			}
+
+			unset($editeur->idEditeur);
+			$editeur->create();
+			$view = 'update';
+			$title = 'Modifier un editeur';
+			$info = 'Nouvel éditeur créer';
+			require_once File::buildPath(array('view', 'view.php'));
+		}
+
 		// Modifie ou créer un editeur dans la base de donnée
-		public static function actionCreateUpdateEditeur() {
+		public static function actionUpdate() {
 			$controller = 'editeur';
 			$view = 'update';
-			$title = 'Créer ou modifier un editeur';
+			$title = 'Modifier un editeur';
 
 			$editeur = new ModelEditeur();
+			if (isset($_POST['actifEditeur'])) {
+				$_POST['actifEditeur'] = 1;
+			} else {
+				$_POST['actifEditeur'] = 0;
+			}
 			$editeur->setArray($_POST);
 
 			// Le nom d'éditeur est obligatoire
@@ -28,40 +98,37 @@
 				return false;
 			}
 
-			if (!isset($editeur->idEditeur)) {
-				$editeur->idEditeur = -1;
-			}
+			// Vérifie que l'éditeur existe
+			$editeurFound = ModelEditeur::getID($editeur->idEditeur);
 
-			// On créer l'éditeur si il n'existe pas encore
-			try {
-				$editeurFound = ModelEditeur::getEditeurId($editeur->idEditeur);	
-			} catch (PDOException $exception) {
-				if (Conf::$debug) {
-					echo $exception->getMessage();
-					die();
-				}
-				$error = 'Impossible de créer ou modifier cet éditeur...';
+			if (!$editeurFound) {
+				// L'éditeur n'existe pas
+				$error = 'Impossible de modifier l\'éditeur';
 				require_once File::buildPath(array('view', 'view.php'));
 				return false;
 			}
 
+			$info = 'Editeur mis à jour';
+			$editeur->update();
+			require_once File::buildPath(array('view', 'view.php'));
+		}
 
-			if (!$editeurFound) {
-				// L'éditeur n'existe pas, on le créer
-				$info = 'Nouvel éditeur créer';
-				unset($editeur->idEditeur);
-				var_dump($editeur);
-				$editeur->create();
-				require_once File::buildPath(array('view', 'view.php'));
-
-			} else {
-				// L'éditeur existe on le modifie
-				$editeur = editeurFound[0];
-				$info = 'Editeur mis à jour';
-				$editeur->update();
+		public static function actionDelete() {
+			if (!isset($_GET['idEditeur'])) {
+				static::readAll('', 'Impossible de supprimer cet éditeur');
+				return false;
 			}
 			
-			require_once File::buildPath(array('view', 'view.php'));
+			$editeurFound = ModelEditeur::getID($_GET['idEditeur']);
+			if (!$editeurFound) {
+				static::readAll('', 'Impossible de supprimer cet éditeur');
+				return false;
+			}
+
+			$editeur = $editeurFound[0];
+			$editeur->delete();
+
+			static::readAll('Editeur supprimer');
 		}
 	}
 ?>

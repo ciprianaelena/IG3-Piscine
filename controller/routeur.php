@@ -1,4 +1,8 @@
 <?php
+	function isConnected() {
+		return isset($_SESSION['user']);
+	}
+
 	if (isset($_GET['controller'])) {
 		$controller = htmlspecialchars($_GET['controller']);
 	} else {

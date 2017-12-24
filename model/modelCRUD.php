@@ -6,7 +6,7 @@
 
 		static protected $tableName;
 		static protected $className;
-		static protected $shema;
+		static protected $shema = NULL;
 		static protected $primaryKey;
 
 		public static function getTableName() {
@@ -46,17 +46,22 @@
 			static::updatePrimaryKey();
 		}
 
+		public function __construct() {
+			if (is_null(static::$shema)) {
+				static::registerModel();
+			}
+		}
+
 		public function create() {
 			$sqlInsert = 'INSERT INTO ' . static::getTableName() . '(';
 			$sqlValues = ' VALUES (';
 			$shema = static::getShema();
 			$values = array();
-
-			echo(static::getPrimaryKey());
+			$primaryKeyName = static::getPrimaryKey();
 
 			foreach ($this->data as $columnName => $columnValue) {
 				// Don't add column wich aren't in the database or are part of the key
-				if (isset($shema[$columnName]) && $columnName != static::getPrimaryKey()) {
+				if (isset($shema[$columnName]) && $columnName != $primaryKeyName) {
 					$sqlInsert = $sqlInsert . $columnName . ', ';
 					$sqlValues = $sqlValues . ':' . $columnName . ', ';
 					$values[$columnName] = $columnValue;
@@ -68,13 +73,17 @@
 			$sql = $sqlInsert . $sqlValues;
 			$query = Bdd::$pdo->prepare($sql);
 			$query->execute($values);
+			$this->$primaryKeyName = Bdd::$pdo->lastInsertId();
 		}
 
 		// Read
 		// where is a SQL string, for instance 'login = :login AND password = :pass'
 		// values is a dictionnary of column name => value
-		public static function read($where, $values) {
-			$sql = 'SELECT * FROM ' . static::getTableName() . ' WHERE ' . $where;
+		public static function read($where = '', $values = array()) {
+			$sql = 'SELECT * FROM ' . static::getTableName();
+			if ($where != '') {
+				$sql = $sql .  ' WHERE ' . $where;
+			}
 
 			$query = Bdd::$pdo->prepare($sql);
 			$query->execute($values);
@@ -91,29 +100,33 @@
 		}
 
 		public function update() {
-			$sql = 'UPDATE ' . static::getTableName() . ' SET ' . $set . ' WHERE ' . static::getPrimaryKey() . ' == :primaryKey';
-			$sqlSet = ' SET (';
+			$primaryKeyName = static::getPrimaryKey();
 			$values = array(
-				'primaryKey' => static::getPrimaryKey()
+				'primaryKey' => $this->$primaryKeyName
 			);
 
+			$sqlSet = '';
+
 			foreach ($this->data as $columnName => $columnValue) {
-				if (isset($shema[$columnName])) {
-					$sqlSet = $sqlSet . $columnName . ', ';
+				if (isset(static::$shema[$columnName])) {
+					$sqlSet = $sqlSet . $columnName . ' = :' . $columnName . ', ';
 					$values[$columnName] = $columnValue;
 				}
 			}
 
+			$sqlSet = substr($sqlSet, 0, -2);
+			$sql = 'UPDATE ' . static::getTableName() . ' SET ' . $sqlSet . ' WHERE ' . $primaryKeyName . ' = :primaryKey';
 			$query = Bdd::$pdo->prepare($sql);
 			$query->execute($values);
 		}
 
 		public function delete() {
-			$sql = 'DELETE FROM ' . static::getTableName() . ' WHERE ' . static::getPrimaryKey() . ' == :primaryKey';
+			$primaryKeyName = static::getPrimaryKey();
+			$sql = 'DELETE FROM ' . static::getTableName() . ' WHERE ' . $primaryKeyName . ' = :primaryKey';
 
 			$query = Bdd::$pdo->prepare($sql);
 			$query->execute(array(
-				'primaryKey' => static::getPrimaryKey()
+				'primaryKey' => $this->$primaryKeyName
 			));
 		}
 	}

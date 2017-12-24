@@ -10,9 +10,9 @@
 	</p>
 <?php endif; ?>
 
-<h1>Modifier un éditeur</h1>
+<h1>Créer un éditeur</h1>
 
-<form method='post' action='index.php?controller=editeur&action=actionUpdate'>
+<form method='post' action='index.php?controller=editeur&action=actionCreate'>
 
 	<input type="hidden" name="idEditeur" value="<?php if (isset($editeur)): $editeur->echo('idEditeur'); endif; ?>">
 

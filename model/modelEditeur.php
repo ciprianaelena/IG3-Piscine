@@ -7,12 +7,22 @@
 		static protected $tableName = 'editeur';
 
 		// Retourne un editeur par son ID
-		public static function getEditeurID($idEditeur) {
+		public static function getID($id) {
 			$where = 'idEditeur = :idEditeur';
-			$values = array('idEditeur' => $idEditeur);
+			$values = array('idEditeur' => $id);
 			return self::readOrFalse($where, $values);
 		}
-	}
 
-	ModelEditeur::registerModel();
+		// Vérifie si le nom de l'éditeur est unique
+		public function isNomEditeurUnique() {
+			$where = 'nomEditeur = :nomEditeur';
+			$values = array('nomEditeur' => $this->nomEditeur);
+			$query = self::readOrFalse($where, $values);
+			if (!$query) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 ?>

@@ -324,3 +324,9 @@ ALTER TABLE `user`
 --
 ALTER TABLE `zone`
   MODIFY `idZone` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--- Ajout des clés étrangères pour le représentant
+ALTER TABLE `representant` ADD `idEditeur` INT(10) UNSIGNED NOT NULL AFTER `idRepresentant`;
+ALTER TABLE `representant` ADD CONSTRAINT `fkRepresentantEditeur` 
+FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
+
