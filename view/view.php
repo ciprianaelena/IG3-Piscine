@@ -32,7 +32,7 @@
 			<?php if (isConnected()): ?>
 				<select>
 					<?php
-						require_once File::buildPath(array('model', 'ModelFestival.php'));
+						require_once File::buildPath(array('model', 'modelFestival.php'));
 						$listFestival = ModelFestival::read();
 						foreach ($listFestival as $festival) {
 							?>

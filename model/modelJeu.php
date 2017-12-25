@@ -13,6 +13,8 @@
 			return self::readOrFalse($where, $values);
 		}
 
-		
+		private function isNumericSet() {
+			
+		}
 	}
 ?>

@@ -12,15 +12,18 @@
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
-		public static function viewCreate() {
+		public static function viewCreate($jeu = NULL, $error = NULL) {
 			$controller = 'jeu';
 			$view = 'create';
 			$title = 'Ajouter un jeu';
 
+			require_once File::buildPath(array('model', 'modelEditeur.php'));
+			$listEditeur = ModelEditeur::read();
+
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
-		public static function viewUpdate() {
+		public static function viewUpdate($jeu = NULL, $info = NULL, $error = NULL) {
 			$controller = 'jeu';
 			$view = 'update';
 			$title = 'Modifier un jeu';
@@ -36,6 +39,9 @@
 				}
 			}
 
+			require_once File::buildPath(array('model', 'modelEditeur.php'));
+			$listEditeur = ModelEditeur::read();
+
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
@@ -47,23 +53,30 @@
 			} else {
 				$_POST['prototype'] = 0;
 			}
-			$_POST['largeur'] = (int) $_POST['largeur'];
-			$_POST['hauteur'] = (int) $_POST['hauteur'];
-			$_POST['longueur'] = (int) $_POST['longueur'];
-			$_POST['poids'] = (int) $_POST['poids'];
-			$_POST['nbJoueur'] = (int) $_POST['nbJoueur'];
-			$_POST['dureePartie'] = (int) $_POST['dureePartie'];
-			unset($_POST['dateSortie']);
-			$jeu->setArray($_POST);
 
-			var_dump($jeu);
+			$jeu->setArrayType($_POST);
+
+			if ($jeu->nomJeu == '') {
+				$error = 'Le nom du jeu est obligatoire';
+				static::viewCreate($jeu, $error);
+				return false;
+			}
+
+			if (!isset($_POST['(int)idEditeur'])) {
+				static::viewCreate($jeu, 'Le champ éditeur est obligatoire');
+				return false;
+			}
+
+			require_once File::buildPath(array('model', 'modelEditeur.php'));
+			$editeurFound = ModelEditeur::getID($jeu->idEditeur);
+			if (!$editeurFound) {
+				static::viewCreate($jeu, 'L\'éditeur est introuvable');
+				return false;
+			}
 
 			unset($jeu->idJeu);
 			$jeu->create();
-			$view = 'update';
-			$title = 'Modifier un jeu';
-			$info = 'Le jeu à était ajouter';
-			require_once File::buildPath(array('view', 'view.php'));
+			static::viewUpdate($jeu);
 		}
 
 		public static function actionUpdate() {
@@ -77,39 +90,44 @@
 			} else {
 				$_POST['prototype'] = 0;
 			}
-			$jeu->setArray($_POST);
 
-			$jeuFound = static::getID($jeu->idJeu);
+			$jeu->setArrayType($_POST);
+
+			if ($jeu->nomJeu == '') {
+				$error = 'Le nom du jeu est obligatoire';
+				static::viewUpdate($jeu, NULL, $error);
+				return false;
+			}
+
+			$jeuFound = ModelJeu::getID($jeu->idJeu);
 
 			if (!$jeuFound) {
 				$error = 'Impossible de modifier le jeu';
-				require_once File::buildPath(array('view', 'view.php'));
+				static::viewUpdate($jeu, NULL, $error);
 				return false;
 			}
 
 			$info = 'Le jeu à correctement était modifié';
 			$jeu->update();
-			require_once File::buildPath(array('view', 'view.php'));
+			static::viewUpdate($jeu, $info);
 		}
 
-		/*
 		public static function actionDelete() {
-			if (!isset($_GET['idRepresentant'])) {
-				static::readAll(NULL, '', 'Impossible de supprimer ce représentant');
+			if (!isset($_GET['idJeu'])) {
+				static::readAll(NULL, '', 'Impossible de supprimer ce jeu');
 				return false;
 			}
 			
-			$representantFound = ModelRepresentant::getID($_GET['idRepresentant']);
-			if (!$representantFound) {
-				static::readAll(NULL, '', 'Impossible de supprimer ce représentant');
+			$jeuFound = ModelJeu::getID($_GET['idJeu']);
+			if (!$jeuFound) {
+				static::readAll(NULL, '', 'Impossible de supprimer ce jeu');
 				return false;
 			}
 
-			$representant = $representantFound[0];
-			$representant->delete();
+			$jeu = $jeuFound[0];
+			$jeu->delete();
 
-			static::readAll($representant->idEditeur, 'Représentant supprimer');
+			static::readAll('Jeu supprimer');
 		}
-		*/
 	}
 ?>

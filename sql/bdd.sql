@@ -325,8 +325,18 @@ ALTER TABLE `user`
 ALTER TABLE `zone`
   MODIFY `idZone` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
---- Ajout des clés étrangères pour le représentant
+
+
+-- MODIFICATIONS
+
+--- Ajout de la clé étrangère pour le représentant
 ALTER TABLE `representant` ADD `idEditeur` INT(10) UNSIGNED NOT NULL AFTER `idRepresentant`;
-ALTER TABLE `representant` ADD CONSTRAINT `fkRepresentantEditeur` 
-FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `representant` ADD CONSTRAINT `fkRepresentantEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--- Autorise certainnes colonnes de la table jeu à être null
+ALTER TABLE `jeu` CHANGE `largeur` `largeur` INT(11) NULL, CHANGE `hauteur` `hauteur` INT(11) NULL, CHANGE `longueur` `longueur` INT(11) NULL, CHANGE `poids` `poids` INT(11) NULL, CHANGE `dateSortie` `dateSortie` DATE NULL DEFAULT NULL, CHANGE `nbJoueur` `nbJoueur` INT(11) NULL, CHANGE `dureePartie` `dureePartie` INT(11) NULL DEFAULT NULL;
+
+-- Ajout de la clé étrangère dans la table jeu
+ALTER TABLE `jeu` ADD `idEditeur` INT(10) UNSIGNED NOT NULL AFTER `idJeu`;
+ALTER TABLE `jeu` ADD CONSTRAINT `fkJeuEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
 
