@@ -6,7 +6,7 @@
 		public static function readAll($idEditeur = NULL, $info = '', $error = '') {
 			$controller = 'representant';
 			$view = 'readAll';
-			$title = 'Liste des représentant';
+			$title = 'Liste des représentants';
 
 			if (!is_null($idEditeur)) {
 				$_GET['idEditeur'] = $idEditeur;
@@ -15,7 +15,7 @@
 			require_once File::buildPath(array('controller', 'controllerEditeur.php'));
 
 			if (!isset($_GET['idEditeur'])) {
-				ControllerEditeur::readAll('', 'Impossible de récupérer la liste des représentant pour cet éditeur');
+				ControllerEditeur::readAll('', 'Impossible de récupérer la liste des représentants pour cet éditeur');
 				return false;
 			}
 
@@ -45,6 +45,8 @@
 			if (!$editeur) {
 				ControllerEditeur::readAll('', 'Editeur invalide');
 				return false;
+			} else {
+				$editeur = $editeur[0];
 			}
 
 			require_once File::buildPath(array('view', 'view.php'));
@@ -69,6 +71,35 @@
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
+		public static function consult(){
+			$controller = 'representant';
+			$view = 'consult';
+			$title = 'Représentant';
+
+			if (isset($_GET['idRepresentant'])) {
+				$where = 'idRepresentant = :idRepresentant';
+				$values = array('idRepresentant' => $_GET['idRepresentant']);
+				$representant = ModelRepresentant::readOrFalse($where, $values);
+				if (!$representant) {
+					unset($representant);
+				} else {
+					$representant = $representant[0];
+					$title = $representant->prenomRepresentant .' '. $representant->nomRepresentant;
+
+					//On extrait l'éditeur lié au représentant
+					require_once File::buildPath(array('model', 'modelEditeur.php'));
+					$editeur = ModelEditeur::getID($representant->idEditeur);
+					if(!$editeur){
+						unset($editeur);
+					}else {
+						$editeur = $editeur[0];
+					}
+				}
+			}
+
+			require_once File::buildPath(array('view','view.php'));
+		}
+
 		public static function actionCreate() {
 			$controller = 'representant';
 			$representant = new ModelRepresentant();
@@ -91,7 +122,7 @@
 			$representant->create();
 			$view = 'update';
 			$title = 'Modifier un representant';
-			$info = 'Nouveau représentant créer';
+			$info = 'Nouveau représentant créé';
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
@@ -127,7 +158,7 @@
 				static::readAll(NULL, '', 'Impossible de supprimer ce représentant');
 				return false;
 			}
-			
+
 			$representantFound = ModelRepresentant::getID($_GET['idRepresentant']);
 			if (!$representantFound) {
 				static::readAll(NULL, '', 'Impossible de supprimer ce représentant');
@@ -137,7 +168,7 @@
 			$representant = $representantFound[0];
 			$representant->delete();
 
-			static::readAll($representant->idEditeur, 'Représentant supprimer');
+			static::readAll($representant->idEditeur, 'Représentant supprimé');
 		}
 	}
 ?>

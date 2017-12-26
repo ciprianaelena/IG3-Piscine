@@ -341,3 +341,7 @@ ALTER TABLE `jeu` CHANGE `largeur` `largeur` INT(11) NULL, CHANGE `hauteur` `hau
 -- Ajout de la clé étrangère dans la table jeu
 ALTER TABLE `jeu` ADD `idEditeur` INT(10) UNSIGNED NOT NULL AFTER `idJeu`;
 ALTER TABLE `jeu` ADD CONSTRAINT `fkJeuEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Ajout de la clé étrangère pour le suivi contact
+ALTER TABLE `suiviContact` ADD `idEditeur` INT(10) UNSIGNED NOT NULL AFTER `idContact`;
+ALTER TABLE `suiviContact` ADD CONSTRAINT `fksuiviContactEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;

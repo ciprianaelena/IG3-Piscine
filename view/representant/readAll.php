@@ -24,7 +24,7 @@
 	?>
 
 		<p>
-			<a href="/index.php?controller=representant&action=viewUpdate&idRepresentant=<?php $representant->echo('idRepresentant') ?>"><?php $representant->echo('prenomRepresentant'); echo(' '); $representant->echo('nomRepresentant'); ?></a>
+			<a href="/index.php?controller=representant&action=consult&idRepresentant=<?php $representant->echo('idRepresentant') ?>"><?php $representant->echo('prenomRepresentant'); echo(' '); $representant->echo('nomRepresentant'); ?></a>
 			<a href="/index.php?controller=representant&action=actionDelete&idRepresentant=<?php $representant->echo('idRepresentant') ?>">Supprimer</a>
 		</p>
 

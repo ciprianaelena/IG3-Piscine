@@ -21,7 +21,7 @@
 
 			require_once File::buildPath(array('view', 'view.php'));
 		}
-		
+
 		public static function viewUpdate() {
 			$controller = 'editeur';
 			$view = 'update';
@@ -36,6 +36,38 @@
 				} else {
 					$editeur = $editeur[0];
 				}
+			}
+
+			require_once File::buildPath(array('view', 'view.php'));
+		}
+
+		public static function consult() {
+			$controller = 'editeur';
+			$view = 'consult';
+			$title = "Editeur";
+
+
+			if (isset($_GET['idEditeur'])) {
+				$where = 'idEditeur = :idEditeur';
+				$values = array('idEditeur' => $_GET['idEditeur']);
+				$editeur = ModelEditeur::readOrFalse($where, $values);
+
+				require_once File::buildPath(array('model','modelJeu.php'));
+				$listJeux = ModelJeu::readOrFalse($where,$values);
+
+				require_once File::buildPath(array('model','modelContact.php'));
+				$listContact = ModelContact::readAll($_GET['idEditeur']);
+
+				if (!$editeur) {
+					unset($editeur);
+				} else {
+					$editeur = $editeur[0];
+					$title = $editeur->nomEditeur;
+				}
+			} else {
+				$listJeux = false;
+				$listContact = false;
+				$error = "Veuillez sélectionner un éditeur";
 			}
 
 			require_once File::buildPath(array('view', 'view.php'));
@@ -118,7 +150,7 @@
 				static::readAll('', 'Impossible de supprimer cet éditeur');
 				return false;
 			}
-			
+
 			$editeurFound = ModelEditeur::getID($_GET['idEditeur']);
 			if (!$editeurFound) {
 				static::readAll('', 'Impossible de supprimer cet éditeur');

@@ -17,7 +17,7 @@
 	<input type="hidden" name="idJeu" value="<?php if (isset($jeu)): $jeu->echo('idJeu'); endif; ?>" />
 
 	<p>
-		<input type="text" placeholder="Nom" 
+		<input type="text" placeholder="Nom"
 		name="nomJeu" value="<?php if (isset($jeu)): $jeu->echo('nomJeu'); endif; ?>" required />
 	</p>
 
@@ -27,9 +27,10 @@
 			<p>Aucun éditeur existant</p>
 		<?php else: ?>
 			<select name="(int)idEditeur">
-				<option selected value="-1">Choisissez un éditeur</option>
-				<?php foreach ($listEditeur as $editeur) { ?>
-						<option value="<?php $editeur->echo('idEditeur'); ?>"><?php $editeur->echo('nomEditeur'); ?></option>
+				<option <?php if($selectedEditeur==-1): echo("selected"); endif; ?> value="-1">Choisissez un éditeur</option>
+				<?php foreach ($listEditeur as $editeur) {
+						$id = $editeur->idEditeur; ?>
+						<option <?php if($selectedEditeur==$id): echo("selected"); endif; ?> value="<?php echo($id); ?>"><?php $editeur->echo('nomEditeur'); ?></option>
 				<?php } ?>
 			</select>
 		<?php endif; ?>
@@ -41,14 +42,14 @@
 	</p>
 
 	<p>
-		<input type="checkbox" placeholder="Actif" name="prototype" value="prototype" 
-			<?php 
+		<input type="checkbox" placeholder="Actif" name="prototype" value="prototype"
+			<?php
 				if (isset($jeu)) {
 					if ($jeu->prototype) {
 						echo "checked";
 					}
 				}
-			?> 
+			?>
 		/>
 		Prototype
 	</p>
@@ -56,23 +57,23 @@
 
 	<p>Dimensions</p>
 	<p>
-		<input type="number" placeholder="Largeur" 
+		<input type="number" placeholder="Largeur"
 		name="(null)(int)largeur" value="<?php if (isset($jeu)): $jeu->echo('largeur'); endif; ?>" />
 	</p>
 
 	<p>
-		<input type="number" placeholder="Hauteur" 
+		<input type="number" placeholder="Hauteur"
 		name="(null)(int)hauteur" value="<?php if (isset($jeu)): $jeu->echo('hauteur'); endif; ?>" />
 	</p>
 
 	<p>
-		<input type="number" placeholder="Longueur" 
+		<input type="number" placeholder="Longueur"
 		name="(null)(int)longueur" value="<?php if (isset($jeu)): $jeu->echo('longueur'); endif; ?>" />
 	</p>
 
 	<p>
 		Poids en grammes
-		<input type="number" placeholder="Poids" 
+		<input type="number" placeholder="Poids"
 		name="(null)(int)poids" value="<?php if (isset($jeu)): $jeu->echo('poids'); endif; ?>" />
 	</p>
 

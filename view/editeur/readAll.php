@@ -23,7 +23,7 @@
 	?>
 
 		<p>
-			<a href="/index.php?controller=editeur&action=viewUpdate&idEditeur=<?php $editeur->echo('idEditeur') ?>"><?php $editeur->echo('nomEditeur') ?></a>
+			<a href="/index.php?controller=editeur&action=consult&idEditeur=<?php $editeur->echo('idEditeur') ?>"><?php $editeur->echo('nomEditeur') ?></a>
 			<a href="/index.php?controller=representant&action=readAll&idEditeur=<?php $editeur->echo('idEditeur') ?>">Voir les représentants</a>
 			<a href="/index.php?controller=editeur&action=actionDelete&idEditeur=<?php $editeur->echo('idEditeur') ?>">Supprimer</a>
 		</p>

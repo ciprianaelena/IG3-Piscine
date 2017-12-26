@@ -6,7 +6,7 @@
 		static protected $className = 'ModelRepresentant';
 		static protected $tableName = 'representant';
 
-		// Retourne un editeur par son ID
+		// Retourne un représentant par son ID
 		public static function getID($id) {
 			$where = 'idRepresentant = :idRepresentant';
 			$values = array('idRepresentant' => $id);

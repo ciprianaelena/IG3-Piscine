@@ -20,6 +20,11 @@
 			require_once File::buildPath(array('model', 'modelEditeur.php'));
 			$listEditeur = ModelEditeur::read();
 
+			if (isset($_GET['idEditeur'])) {
+				$selectedEditeur = $_GET['idEditeur'];
+			} else {
+				$selectedEditeur = -1;
+			}
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
@@ -43,6 +48,41 @@
 			$listEditeur = ModelEditeur::read();
 
 			require_once File::buildPath(array('view', 'view.php'));
+		}
+
+		public static function consult() {
+			$controller = 'jeu';
+			$view = 'consult';
+			$title = 'Jeu';
+
+			if(isset($_GET['idJeu'])){
+				$where = 'idJeu = :idJeu';
+				$values = array('idJeu' => $_GET['idJeu']);
+				$jeu = ModelJeu::readOrFalse($where,$values);
+
+				if(!$jeu){
+					unset($jeu);
+				} else {
+					$jeu = $jeu[0];
+					$title = $jeu->nomJeu;
+
+					//On extrait l'éditeur lié au jeu
+					require_once File::buildPath(array('model', 'modelEditeur.php'));
+					$editeur = ModelEditeur::getID($jeu->idEditeur);
+					if(!$editeur){
+						unset($editeur);
+					}else {
+						$editeur = $editeur[0];
+					}
+				}
+
+			} else {
+				$error = "Veuillez sélectionner un jeu";
+			}
+
+			require_once File::buildPath(array('view', 'view.php'));
+
+
 		}
 
 		public static function actionCreate() {
@@ -107,7 +147,7 @@
 				return false;
 			}
 
-			$info = 'Le jeu à correctement était modifié';
+			$info = 'Le jeu a correctement été modifié';
 			$jeu->update();
 			static::viewUpdate($jeu, $info);
 		}
@@ -117,7 +157,7 @@
 				static::readAll(NULL, '', 'Impossible de supprimer ce jeu');
 				return false;
 			}
-			
+
 			$jeuFound = ModelJeu::getID($_GET['idJeu']);
 			if (!$jeuFound) {
 				static::readAll(NULL, '', 'Impossible de supprimer ce jeu');
@@ -127,7 +167,7 @@
 			$jeu = $jeuFound[0];
 			$jeu->delete();
 
-			static::readAll('Jeu supprimer');
+			static::readAll('Jeu supprimé');
 		}
 	}
 ?>
