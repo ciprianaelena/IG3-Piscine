@@ -22,7 +22,7 @@
 	</p>
 
 	<p>
-		<p>Editeur</p>
+		Editeur
 		<?php if (empty($listEditeur)): ?>
 			<p>Aucun éditeur existant</p>
 		<?php else: ?>

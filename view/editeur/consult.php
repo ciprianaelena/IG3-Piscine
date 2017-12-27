@@ -103,7 +103,7 @@
 		<a href="/index.php?controller=contact&action=viewCreate&idEditeur=<?php if (isset($editeur)): $editeur->echo('idEditeur'); endif; ?>">Ajouter un contact</a>
 
 		<?php if (!$listContact): ?>
-			<p> Aucun jeu </p>
+			<p> Aucun contact </p>
 		<?php
 			else:
 				foreach ($listContact as $contact) {

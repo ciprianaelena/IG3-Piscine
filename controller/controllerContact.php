@@ -50,6 +50,8 @@
 				$editeur = $editeur[0];
 			}
 
+			require_once File::buildPath(array('controller', 'controllerRepresentant.php'));
+			$listRepresentant = ModelRepresentant::readAll($_GET['idEditeur']);
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
@@ -61,7 +63,6 @@
 			} else {
 				$_POST['clos'] = 0;
 			}
-
 			$contact->setArray($_POST);
 
 			require_once File::buildPath(array('controller', 'controllerEditeur.php'));
@@ -102,6 +103,15 @@
 						unset($editeur);
 					}else {
 						$editeur = $editeur[0];
+					}
+
+					//On extrait le représentant lié au contact
+					require_once File::buildPath(array('model', 'modelRepresentant.php'));
+					$representant = ModelRepresentant::getID($contact->idRepresentant);
+					if(!$representant){
+						unset($representant);
+					} else {
+						$representant = $representant[0];
 					}
 				}
 			}

@@ -32,6 +32,13 @@
         </li>
 
         <li>
+            Representant :
+            <?php if(isset($representant)):?>
+                <a href="/index.php?controller=representant&action=consult&idRepresentant=<?php $representant->echo('idRepresentant') ?>"> <?php echo($representant->prenomRepresentant.' '.$representant->nomRepresentant); ?></a>
+            <?php endif; ?>
+        </li>
+
+        <li>
             Date du contact : <?php if (isset($contact)): $contact->echo('dateContact'); endif; ?>
         </li>
 
