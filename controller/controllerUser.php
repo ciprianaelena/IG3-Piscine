@@ -39,7 +39,7 @@
 		}
 
 		// Display a login form
-		public static function viewConnect() {
+		public static function viewConnect($error = NULL) {
 			$controller = 'user';
 			$view = 'connect';
 			$title = 'Connection';

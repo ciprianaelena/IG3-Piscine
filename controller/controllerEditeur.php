@@ -46,29 +46,30 @@
 			$view = 'consult';
 			$title = "Editeur";
 
-
-			if (isset($_GET['idEditeur'])) {
-				$where = 'idEditeur = :idEditeur';
-				$values = array('idEditeur' => $_GET['idEditeur']);
-				$editeur = ModelEditeur::readOrFalse($where, $values);
-
-				require_once File::buildPath(array('model','modelJeu.php'));
-				$listJeux = ModelJeu::readOrFalse($where,$values);
-
-				require_once File::buildPath(array('model','modelContact.php'));
-				$listContact = ModelContact::readAll($_GET['idEditeur']);
-
-				if (!$editeur) {
-					unset($editeur);
-				} else {
-					$editeur = $editeur[0];
-					$title = $editeur->nomEditeur;
-				}
-			} else {
-				$listJeux = false;
-				$listContact = false;
+			if (!isset($_GET['idEditeur'])) {
 				$error = "Veuillez sélectionner un éditeur";
+				require_once File::buildPath(array('view', 'view.php'));
+				return false;
 			}
+
+			$where = 'idEditeur = :idEditeur';
+			$values = array('idEditeur' => $_GET['idEditeur']);
+			$editeur = ModelEditeur::readOrFalse($where, $values);
+
+			if (!$editeur) {
+				$error = "L'éditeur est invalide";
+				require_once File::buildPath(array('view', 'view.php'));
+				return false;
+			}
+
+			require_once File::buildPath(array('model','modelJeu.php'));
+			$listJeux = ModelJeu::readOrFalse($where,$values);
+
+			require_once File::buildPath(array('model','modelContact.php'));
+			$listContact = ModelContact::readAll($_GET['idEditeur']);
+
+			$editeur = $editeur[0];
+			$title = $editeur->nomEditeur;
 
 			require_once File::buildPath(array('view', 'view.php'));
 		}

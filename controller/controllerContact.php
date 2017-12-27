@@ -75,6 +75,7 @@
 			}
 
 			unset($contact->idContact);
+
 			$contact->create();
 			$view = 'consult';
 			$title = 'Contact';

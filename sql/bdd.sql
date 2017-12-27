@@ -350,4 +350,8 @@ ALTER TABLE `suiviContact` ADD CONSTRAINT `fksuiviContactEditeur` FOREIGN KEY (`
 ALTER TABLE `suiviContact` ADD `idRepresentant` INT(10) UNSIGNED NOT NULL AFTER `idEditeur`;
 ALTER TABLE `suiviContact` ADD CONSTRAINT `fksuiviContactRepresentant` FOREIGN KEY (`idRepresentant`) REFERENCES `representant`(`idRepresentant`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- Ajout de la clé étrangère idEditeur dans la table suiviContact
+ALTER TABLE `suivicontact` ADD `idEditeur` INT(10) UNSIGNED NOT NULL AFTER `idContact`;
+ALTER TABLE `suivicontact` ADD CONSTRAINT `fkSuiviContactEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 

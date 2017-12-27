@@ -56,7 +56,7 @@
 
 	<p>
 		<input type="text" placeholder="Commentaires"
-		name="commentaireRepresentant" value="<?php if (isset($contact)): $contact->echo('commentaireRepresentant'); endif; ?>" />
+		name="commentaireContact" value="<?php if (isset($contact)): $contact->echo('commentaireContact'); endif; ?>" />
 	</p>
 
 	<p>
