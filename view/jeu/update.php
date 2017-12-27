@@ -17,6 +17,8 @@
 
 	<input type="hidden" name="idJeu" value="<?php if (isset($jeu)): $jeu->echo('idJeu'); endif; ?>" />
 
+
+
 	<p>
 		<input type="text" placeholder="Nom"
 		name="nomJeu" value="<?php if (isset($jeu)): $jeu->echo('nomJeu'); endif; ?>" required />
@@ -27,7 +29,7 @@
 		<?php if (empty($listEditeur)): ?>
 			<p>Aucun éditeur existant</p>
 		<?php else: ?>
-			<select>
+			<select name="(int)idEditeur">
 				<?php foreach ($listEditeur as $editeur) { ?>
 						<option <?php
 									if(isset($jeu)) {

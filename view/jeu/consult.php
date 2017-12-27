@@ -16,10 +16,6 @@
 <!-- Affichage des informations du jeu -->
 <div>
 	<ul>
-		<li>
-			Identifiant : <?php if (isset($jeu)): $jeu->echo('idJeu'); endif; ?>
-		</li>
-
 
 		<li>
 			Nom : <?php if (isset($jeu)): $jeu->echo('nomJeu'); endif; ?>
@@ -79,8 +75,9 @@
 		</li>
 	</ul>
 
-	<?php
-	if(isset($jeu)){
-		echo('<a href="/index.php?controller=jeu&action=viewUpdate&idJeu='.$jeu->idJeu.'">Modifier '.$jeu->nomJeu.'</a>');
-	}?>
+	<?php if(isset($jeu)){ ?>
+		<a href="/index.php?controller=jeu&action=viewUpdate&idJeu=<?php $jeu->echo('idJeu')?>">Modifier <?php $jeu->echo('nomJeu') ?> </a>
+
+		<a href="/index.php?controller=jeu&action=actionDelete&idJeu=<?php $jeu->echo('idJeu') ?>">Supprimer</a>
+	<?php }?>
 </div>

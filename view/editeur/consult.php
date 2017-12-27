@@ -19,36 +19,19 @@
 <div>
 	<ul>
 
-		<li> Identifiant : <?php if (isset($editeur)): $editeur->echo('idEditeur'); endif; ?></li>
-
-
 		<li> Nom : <?php if (isset($editeur)): $editeur->echo('nomEditeur'); endif; ?></li>
-
-
-
-		<li> Pays : <?php if (isset($editeur)): $editeur->echo('paysEditeur'); endif; ?> </li>
-
-
-
-		<li> Ville : <?php if (isset($editeur)): $editeur->echo('villeEditeur'); endif; ?></li>
-
-
 
 		<li> Rue : <?php if (isset($editeur)): $editeur->echo('rueEditeur'); endif; ?> </li>
 
-
-
 		<li> Code Postal : <?php if (isset($editeur)): $editeur->echo('codePostalEditeur'); endif; ?> </li>
 
+		<li> Ville : <?php if (isset($editeur)): $editeur->echo('villeEditeur'); endif; ?></li>
 
+		<li> Pays : <?php if (isset($editeur)): $editeur->echo('paysEditeur'); endif; ?> </li>
 
 		<li> Site Web : <?php if (isset($editeur)): $editeur->echo('siteWebEditeur'); endif; ?> </li>
 
-
-
 		<li> Commentaire : <?php if (isset($editeur)): $editeur->echo('commentaireEditeur'); endif; ?> </li>
-
-
 
 		<?php
 				if (isset($editeur)) {
@@ -64,6 +47,7 @@
 	<?php if(isset($editeur)):?>
 		<a href="/index.php?controller=representant&action=readAll&idEditeur=<?php $editeur->echo('idEditeur') ?>">Voir les représentants</a>
 		<a href="/index.php?controller=editeur&action=viewUpdate&idEditeur=<?php $editeur->echo('idEditeur')?>">Modifier <?php $editeur->echo('nomEditeur	')?></a>
+		<a href="/index.php?controller=editeur&action=actionDelete&idEditeur=<?php $editeur->echo('idEditeur') ?>">Supprimer</a>
 	<?php endif;?>
 </div>
 
@@ -110,7 +94,8 @@
 		?>
 
 			<p>
-				<a href="/index.php?controller=contact&action=consult&idContact=<?php $contact->echo('idContact') ?>"><?php $contact->echo('dateContact'); ?></a>
+				<a href="/index.php?controller=contact&action=consult&idContact=<?php $contact->echo('idContact') ?>"><?php echo($contact->typeContact." / ".$contact->dateContact); ?></a>
+				<a href="/index.php?controller=contact&action=actionDelete&idContact=<?php $contact->echo('idContact') ?>">Supprimer</a>
 			</p>
 
 		<?php

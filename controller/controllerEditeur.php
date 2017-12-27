@@ -33,18 +33,27 @@
 				$editeur = ModelEditeur::readOrFalse($where, $values);
 				if (!$editeur) {
 					unset($editeur);
+					$error = "Editeur invalide";
+					self::readAll('',$error);
 				} else {
 					$editeur = $editeur[0];
 				}
+			} else {
+				$error = "Veuillez selectionner un editeur à modifier";
+				self::readAll('',$error);
 			}
 
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
-		public static function consult() {
+		public static function consult($idEditeur = NULL, $info = '') {
 			$controller = 'editeur';
 			$view = 'consult';
 			$title = "Editeur";
+
+			if (!is_null($idEditeur)) {
+				$_GET['idEditeur'] = $idEditeur;
+			}
 
 			if (!isset($_GET['idEditeur'])) {
 				$error = "Veuillez sélectionner un éditeur";
@@ -104,10 +113,8 @@
 
 			unset($editeur->idEditeur);
 			$editeur->create();
-			$view = 'update';
-			$title = 'Modifier un editeur';
-			$info = 'Nouvel éditeur créer';
-			require_once File::buildPath(array('view', 'view.php'));
+			$info = 'Nouvel éditeur créé';
+			self::consult($editeur->idEditeur,$info);
 		}
 
 		// Modifie ou créer un editeur dans la base de donnée
@@ -143,7 +150,7 @@
 
 			$info = 'Editeur mis à jour';
 			$editeur->update();
-			require_once File::buildPath(array('view', 'view.php'));
+			self::consult($editeur->idEditeur,$info);
 		}
 
 		public static function actionDelete() {

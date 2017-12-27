@@ -63,18 +63,32 @@
 				$representant = ModelRepresentant::readOrFalse($where, $values);
 				if (!$representant) {
 					unset($representant);
+
+					require_once File::buildPath(array('controller', 'controllerEditeur.php'));
+					$error = "Veuillez selectionner un représentant valide en passant par l'éditeur";
+					ControllerEditeur::readAll('', $error);
+
 				} else {
 					$representant = $representant[0];
 				}
+
+			} else {
+				require_once File::buildPath(array('controller', 'controllerEditeur.php'));
+				$error = "Veuillez selectionner un représentant valide en passant par l'éditeur";
+				ControllerEditeur::readAll('', $error);
 			}
 
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
-		public static function consult(){
+		public static function consult($idRepresentant = NULL, $info = ""){
 			$controller = 'representant';
 			$view = 'consult';
 			$title = 'Représentant';
+
+			if(!is_null($idRepresentant)){
+				$_GET['idRepresentant'] = $idRepresentant;
+			}
 
 			if (isset($_GET['idRepresentant'])) {
 				$where = 'idRepresentant = :idRepresentant';
@@ -120,16 +134,12 @@
 
 			unset($representant->idRepresentant);
 			$representant->create();
-			$view = 'update';
-			$title = 'Modifier un representant';
 			$info = 'Nouveau représentant créé';
-			require_once File::buildPath(array('view', 'view.php'));
+			self::consult($representant->idRepresentant,$info);
 		}
 
 		public static function actionUpdate() {
 			$controller = 'representant';
-			$view = 'update';
-			$title = 'Modifier un représentant';
 
 			$representant = new ModelRepresentant();
 			if (isset($_POST['actifRepresentant'])) {
@@ -150,7 +160,7 @@
 			$info = 'Représentant mis à jour';
 			unset($representant->idEditeur);
 			$representant->update();
-			require_once File::buildPath(array('view', 'view.php'));
+			self::consult($representant->idRepresentant,$info);
 		}
 
 		public static function actionDelete() {

@@ -11,5 +11,11 @@
             $values = array('idEditeur' => $idEditeur);
             return static::readOrFalse($where, $values);
         }
+
+        public static function getID($id) {
+            $where = 'idContact = :idContact';
+            $values = array('idContact' => $id);
+            return self::readOrFalse($where, $values);
+        }
     }
 ?>

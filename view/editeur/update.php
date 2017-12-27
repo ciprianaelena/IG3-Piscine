@@ -20,35 +20,30 @@
 		<input type="text" placeholder="Nom"
 		name="nomEditeur" value="<?php if (isset($editeur)): $editeur->echo('nomEditeur'); endif; ?>" required />
 	</p>
-
-	<p>
-		<input type="text" placeholder="Pays"
-		name="paysEditeur" value="<?php if (isset($editeur)): $editeur->echo('paysEditeur'); endif; ?>" />
-	</p>
-
-	<p>
-		<input type="text" placeholder="Ville"
-		name="villeEditeur" value="<?php if (isset($editeur)): $editeur->echo('villeEditeur'); endif; ?>" />
-	</p>
-
 	<p>
 		<input type="text" placeholder="Rue"
 		name="rueEditeur" value="<?php if (isset($editeur)): $editeur->echo('rueEditeur'); endif; ?>" />
 	</p>
-
 	<p>
 		<input type="text" placeholder="Code postal"
 		name="codePostalEditeur" value="<?php if (isset($editeur)): $editeur->echo('codePostalEditeur'); endif; ?>" />
 	</p>
-
+	<p>
+		<input type="text" placeholder="Ville"
+		name="villeEditeur" value="<?php if (isset($editeur)): $editeur->echo('villeEditeur'); endif; ?>" />
+	</p>
+	<p>
+		<input type="text" placeholder="Pays"
+		name="paysEditeur" value="<?php if (isset($editeur)): $editeur->echo('paysEditeur'); endif; ?>" />
+	</p>
 	<p>
 		<input type="text" placeholder="Site web"
 		name="siteWebEditeur" value="<?php if (isset($editeur)): $editeur->echo('siteWebEditeur'); endif; ?>" />
 	</p>
 
 	<p>
-		<input type="text" placeholder="Commentaires"
-		name="commentaireEditeur" value="<?php if (isset($editeur)): $editeur->echo('commentaireEditeur'); endif; ?>" />
+		<textarea placeholder="Commentaires"
+		name="commentaireEditeur"><?php if (isset($editeur)): $editeur->echo('commentaireEditeur'); endif; ?></textarea>
 	</p>
 
 	<p>
@@ -66,7 +61,7 @@
 		Actif
 	</p>
 
-	<p><input type="submit" value="Enregistrer" /></p>
+	<p><input type="submit" value="Modifier" /></p>
 
 </form>
 

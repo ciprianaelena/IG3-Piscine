@@ -16,9 +16,6 @@
 <!-- Affichage des informations du représentant -->
 <div>
     <ul>
-        <li>
-            Identifiant : <?php if (isset($representant)): $representant->echo('idRepresentant'); endif; ?>
-        </li>
 
         <li>
             Prénom : <?php if (isset($representant)): $representant->echo('prenomRepresentant'); endif; ?>
@@ -64,7 +61,8 @@
     </ul>
 
     <?php
-    if(isset($representant)){
-        echo('<a href="/index.php?controller=representant&action=viewUpdate&idRepresentant='.$representant->idRepresentant.'">Modifier '.$representant->prenomRepresentant .' '. $representant->nomRepresentant.'</a>');
-    }?>
+    if(isset($representant)){ ?>
+        <a href="/index.php?controller=representant&action=viewUpdate&idRepresentant=<?php  $representant->echo('idRepresentant');?>">Modifier <?php echo($representant->prenomRepresentant .' '. $representant->nomRepresentant);?> </a>
+        <a href="/index.php?controller=representant&action=actionDelete&idRepresentant=<?php $representant->echo('idRepresentant') ?>">Supprimer</a>
+    <?php } ?>
 </div>

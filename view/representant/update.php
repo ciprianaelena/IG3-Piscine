@@ -17,13 +17,13 @@
 	<input type="hidden" name="idRepresentant" value="<?php if (isset($representant)): $representant->echo('idRepresentant'); endif; ?>">
 
 	<p>
-		<input type="text" placeholder="Nom"
-		name="nomRepresentant" value="<?php if (isset($representant)): $representant->echo('nomRepresentant'); endif; ?>" required />
+		<input type="text" placeholder="Prenom"
+		name="prenomRepresentant" value="<?php if (isset($representant)): $representant->echo('prenomRepresentant'); endif; ?>" />
 	</p>
 
 	<p>
-		<input type="text" placeholder="Prenom"
-		name="prenomRepresentant" value="<?php if (isset($representant)): $representant->echo('prenomRepresentant'); endif; ?>" />
+		<input type="text" placeholder="Nom"
+		name="nomRepresentant" value="<?php if (isset($representant)): $representant->echo('nomRepresentant'); endif; ?>" required />
 	</p>
 
 	<p>

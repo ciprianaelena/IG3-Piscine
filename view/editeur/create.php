@@ -22,8 +22,13 @@
 	</p>
 
 	<p>
-		<input type="text" placeholder="Pays"
-		name="paysEditeur" value="<?php if (isset($editeur)): $editeur->echo('paysEditeur'); endif; ?>" />
+		<input type="text" placeholder="Rue"
+		name="rueEditeur" value="<?php if (isset($editeur)): $editeur->echo('rueEditeur'); endif; ?>" />
+	</p>
+
+	<p>
+		<input type="text" placeholder="Code postal"
+		name="codePostalEditeur" value="<?php if (isset($editeur)): $editeur->echo('codePostalEditeur'); endif; ?>" />
 	</p>
 
 	<p>
@@ -32,13 +37,8 @@
 	</p>
 
 	<p>
-		<input type="text" placeholder="Rue"
-		name="rueEditeur" value="<?php if (isset($editeur)): $editeur->echo('rueEditeur'); endif; ?>" />
-	</p>
-
-	<p>
-		<input type="text" placeholder="Code postal"
-		name="codePostalEditeur" value="<?php if (isset($editeur)): $editeur->echo('codePostalEditeur'); endif; ?>" />
+		<input type="text" placeholder="Pays"
+		name="paysEditeur" value="<?php if (isset($editeur)): $editeur->echo('paysEditeur'); else : echo('France'); endif; ?>" />
 	</p>
 
 	<p>

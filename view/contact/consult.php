@@ -17,10 +17,6 @@
 <div>
     <ul>
         <li>
-            Identifiant : <?php if (isset($contact)): $contact->echo('idContact'); endif; ?>
-        </li>
-
-        <li>
             Type de contact : <?php if (isset($contact)): $contact->echo('typeContact'); endif; ?>
         </li>
 
@@ -61,4 +57,9 @@
             }?>
         </li>
     </ul>
+
+    <?php if(isset($contact)){ ?>
+        <a href="/index.php?controller=contact&action=viewUpdate&idContact= <?php $contact->echo('idContact');?>">Modifier ce contact </a>
+        <a href="/index.php?controller=contact&action=actionDelete&idContact=<?php $contact->echo('idContact') ?>">Supprimer</a>
+    <?php }?>
 </div>

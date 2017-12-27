@@ -20,19 +20,19 @@
 	<?php endif; ?>
 </p>
 
-<form method='post' action='index.php?controller=contact&action=actionCreate'>
+<form method='post' action='index.php?controller=contact&action=actionUpdate'>
 
-	<input type="hidden" name="idEditeur" value="<?php if (isset($_GET['idEditeur'])): echo($_GET['idEditeur']); endif; ?>">
+	<input type="hidden" name="idEditeur" value="<?php if (isset($editeur)): $editeur->echo('idEditeur'); endif; ?>">
 	<input type="hidden" name="idContact" value="<?php if (isset($contact)): $contact->echo('idContact'); endif; ?>">
 
 	<p> Représentant :
 		<?php if (empty($listRepresentant)): ?>
-			Aucun représentant existant. Veuillez en <a href="/index.php?controller=representant&action=viewCreate&idEditeur=<?php echo($_GET['idEditeur']) ?>">créer</a> un.
+			Aucun représentant existant. Veuillez en <a href="/index.php?controller=representant&action=viewCreate&idEditeur=<?php $editeur->echo('idEditeur') ?>">créer</a> un.
 		<?php else: ?>
 			<select name="idRepresentant">
-				<option selected value="-1">Choisissez un représentant</option>
-				<?php foreach ($listRepresentant as $repr) {?>
-						<option value="<?php $repr->echo('idRepresentant'); ?>"><?php echo($repr->prenomRepresentant.' '.$repr->nomRepresentant);?></option>
+				<?php foreach ($listRepresentant as $repr) {
+						 $id = $repr->idRepresentant; ?>
+						<option <?php if($id == $contact->idRepresentant) : echo('selected'); endif;?> value="<?php echo($id);?>"><?php echo($repr->prenomRepresentant.' '.$repr->nomRepresentant);?></option>
 				<?php } ?>
 			</select>
 		<?php endif; ?>
@@ -71,6 +71,6 @@
 		Clos
 	</p>
 
-	<p><input type="submit" value="Enregistrer" /></p>
+	<p><input type="submit" value="Modifier" /></p>
 
 </form>

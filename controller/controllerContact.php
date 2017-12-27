@@ -55,6 +55,39 @@
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
+		public static function viewUpdate() {
+			$controller = 'contact';
+			$view = 'update';
+			$title = 'Modifier un contact';
+
+			require_once File::buildPath(array('controller', 'controllerEditeur.php'));
+			//On vérifie que le contact est donné et existe
+			if (isset($_GET['idContact'])) {
+				$where = 'idContact = :idContact';
+				$values = array('idContact' => $_GET['idContact']);
+				$contact = ModelContact::readOrFalse($where, $values);
+				if (!$contact) {
+					unset($contact);
+					$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
+					ControllerEditeur::readAll('', $error);
+
+				} else {
+					$contact = $contact[0];
+					//Une fois le contact trouvé, on extrait l'éditeur et sa liste de représentant
+					$editeur = ModelEditeur::getID($contact->idEditeur);
+					$editeur = $editeur[0];
+					require_once File::buildPath(array('controller', 'controllerRepresentant.php'));
+					$listRepresentant = ModelRepresentant::readAll($editeur->idEditeur);
+				}
+			} else {
+				$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
+				ControllerEditeur::readAll('', $error);
+
+			}
+
+			require_once File::buildPath(array('view', 'view.php'));
+		}
+
 		public static function actionCreate() {
 			$controller = 'contact';
 			$contact = new ModelContact();
@@ -77,17 +110,64 @@
 			unset($contact->idContact);
 
 			$contact->create();
-			$view = 'consult';
-			$title = 'Contact';
 			$info = 'Nouveau contact créé';
-			require_once File::buildPath(array('view', 'view.php'));
+			self::consult($contact->idContact,$info);
 		}
 
-		public static function consult(){
+		public static function actionUpdate() {
+			$controller = 'contact';
+
+			$contact = new ModelContact();
+			if (isset($_POST['clos'])) {
+				$_POST['clos'] = 1;
+			} else {
+				$_POST['clos'] = 0;
+			}
+			$contact->setArray($_POST);
+
+			$contactFound = ModelContact::getID($contact->idContact);
+			if (!$contactFound) {
+				$error = 'Impossible de modifier le contact';
+				require_once File::buildPath(array('view', 'view.php'));
+				return false;
+			}
+
+			$info = 'Représentant mis à jour';
+			unset($contact->idEditeur);
+			$contact->update();
+			self::consult($contact->idContact,$info);
+		}
+
+		public static function actionDelete() {
+			require_once File::buildPath(array('controller', 'controllerEditeur.php'));
+
+			if (!isset($_GET['idContact'])) {
+				$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
+				ControllerEditeur::readAll('', $error);
+				return false;
+			}
+
+			$contactFound = ModelContact::getID($_GET['idContact']);
+			if (!$contactFound) {
+				$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
+				ControllerEditeur::readAll('', $error);
+				return false;
+			}
+
+			$contact = $contactFound[0];
+			$contact->delete();
+
+			ControllerEditeur::consult($contact->idEditeur, 'Contact supprimé');
+		}
+
+		public static function consult($idContact = NULL, $info = ""){
 			$controller = 'contact';
 			$view = 'consult';
 			$title = 'Contact';
 
+			if(!is_null($idContact)){
+				$_GET['idContact'] = $idContact;
+			}
 			if (isset($_GET['idContact'])) {
 				$where = 'idContact = :idContact';
 				$values = array('idContact' => $_GET['idContact']);
