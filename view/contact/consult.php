@@ -59,7 +59,7 @@
     </ul>
 
     <?php if(isset($contact)){ ?>
-        <a href="/index.php?controller=contact&action=viewUpdate&idContact= <?php $contact->echo('idContact');?>">Modifier ce contact </a>
-        <a href="/index.php?controller=contact&action=actionDelete&idContact=<?php $contact->echo('idContact') ?>">Supprimer</a>
+        <p><a href="/index.php?controller=contact&action=viewUpdate&idContact= <?php $contact->echo('idContact');?>">Modifier ce contact </a></p>
+        <p><a href="/index.php?controller=contact&action=actionDelete&idContact=<?php $contact->echo('idContact') ?>">Supprimer</a></p>
     <?php }?>
 </div>

@@ -69,7 +69,7 @@
 				if (!$contact) {
 					unset($contact);
 					$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
-					ControllerEditeur::readAll('', $error);
+					ControllerEditeur::readAll(NULL, $error);
 
 				} else {
 					$contact = $contact[0];
@@ -81,8 +81,7 @@
 				}
 			} else {
 				$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
-				ControllerEditeur::readAll('', $error);
-
+				ControllerEditeur::readAll(NULL, $error);
 			}
 
 			require_once File::buildPath(array('view', 'view.php'));
@@ -143,14 +142,14 @@
 
 			if (!isset($_GET['idContact'])) {
 				$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
-				ControllerEditeur::readAll('', $error);
+				ControllerEditeur::readAll(NULL, $error);
 				return false;
 			}
 
 			$contactFound = ModelContact::getID($_GET['idContact']);
 			if (!$contactFound) {
 				$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
-				ControllerEditeur::readAll('', $error);
+				ControllerEditeur::readAll(NULL, $error);
 				return false;
 			}
 

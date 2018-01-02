@@ -166,14 +166,14 @@
 
 			if (!isset($_GET['idJeu'])) {
 				$error = "Veuillez selectionner un jeu valide en passant par l'éditeur";
-				ControllerEditeur::readAll('', $error);
+				ControllerEditeur::readAll(NULL, $error);
 				return false;
 			}
 
 			$jeuFound = ModelJeu::getID($_GET['idJeu']);
 			if (!$jeuFound) {
 				$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
-				ControllerEditeur::readAll('', $error);
+				ControllerEditeur::readAll(NULL, $error);
 				return false;
 			}
 

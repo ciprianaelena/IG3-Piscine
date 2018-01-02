@@ -62,7 +62,7 @@
 
     <?php
     if(isset($representant)){ ?>
-        <a href="/index.php?controller=representant&action=viewUpdate&idRepresentant=<?php  $representant->echo('idRepresentant');?>">Modifier <?php echo($representant->prenomRepresentant .' '. $representant->nomRepresentant);?> </a>
-        <a href="/index.php?controller=representant&action=actionDelete&idRepresentant=<?php $representant->echo('idRepresentant') ?>">Supprimer</a>
+        <p><a href="/index.php?controller=representant&action=viewUpdate&idRepresentant=<?php  $representant->echo('idRepresentant');?>">Modifier <?php echo($representant->prenomRepresentant .' '. $representant->nomRepresentant);?> </a></p>
+        <p><a href="/index.php?controller=representant&action=actionDelete&idRepresentant=<?php $representant->echo('idRepresentant') ?>">Supprimer</a></p>
     <?php } ?>
 </div>

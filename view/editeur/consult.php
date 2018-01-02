@@ -1,3 +1,5 @@
+<h1> Consultation d'un éditeur </h1>
+
 <?php if (isset($error)): ?>
 	<p class="error">
 		<?php echo $error; ?>
@@ -10,10 +12,7 @@
 	</p>
 <?php endif; ?>
 
-
-<h1> Consultation d'un éditeur </h1>
 <h2><?php if(isset($editeur)): $editeur->echo('nomEditeur'); endif; ?> </h2>
-
 
 <!-- Affichage des informations de léditeur -->
 <div>
@@ -46,7 +45,9 @@
 
 	<?php if(isset($editeur)):?>
 		<a href="/index.php?controller=representant&action=readAll&idEditeur=<?php $editeur->echo('idEditeur') ?>">Voir les représentants</a>
-		<a href="/index.php?controller=editeur&action=viewUpdate&idEditeur=<?php $editeur->echo('idEditeur')?>">Modifier <?php $editeur->echo('nomEditeur	')?></a>
+		<p>
+			<a href="/index.php?controller=editeur&action=viewUpdate&idEditeur=<?php $editeur->echo('idEditeur')?>">Modifier <?php $editeur->echo('nomEditeur')?></a>
+		</p>
 		<a href="/index.php?controller=editeur&action=actionDelete&idEditeur=<?php $editeur->echo('idEditeur') ?>">Supprimer</a>
 	<?php endif;?>
 </div>
@@ -96,6 +97,32 @@
 			<p>
 				<a href="/index.php?controller=contact&action=consult&idContact=<?php $contact->echo('idContact') ?>"><?php echo($contact->typeContact." / ".$contact->dateContact); ?></a>
 				<a href="/index.php?controller=contact&action=actionDelete&idContact=<?php $contact->echo('idContact') ?>">Supprimer</a>
+			</p>
+
+		<?php
+				}
+			endif;
+		?>
+
+</div>
+
+<!-- Affichage des logements de l'éditeur -->
+<div>
+
+	<h2>Demande de logements</h2>
+
+		<a href="/index.php?controller=logement&action=viewCreate&idEditeur=<?php if (isset($editeur)): $editeur->echo('idEditeur'); endif; ?>">Faire une demande de logement</a>
+
+		<?php if (!$listLogement): ?>
+			<p>Aucune demande de logement</p>
+		<?php
+			else:
+				foreach ($listLogement as $logement) {
+		?>
+
+			<p>
+				<a href="/index.php?controller=logement&action=viewUpdate&idDemande=<?php $logement->echo('idDemande') ?>">Demande n°<?php echo($logement->idDemande); ?></a>
+				<a href="/index.php?controller=logement&action=actionDelete&idDemande=<?php $logement->echo('idDemande') ?>">Supprimer</a>
 			</p>
 
 		<?php

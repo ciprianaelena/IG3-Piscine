@@ -20,8 +20,6 @@
 	<?php endif; ?>
 </p>
 
-
-
 <form method='post' action='index.php?controller=representant&action=actionCreate'>
 
 	<input type="hidden" name="idEditeur" value="<?php if (isset($_GET['idEditeur'])): echo($_GET['idEditeur']); endif; ?>">

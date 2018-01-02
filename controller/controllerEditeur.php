@@ -77,6 +77,9 @@
 			require_once File::buildPath(array('model','modelContact.php'));
 			$listContact = ModelContact::readAll($_GET['idEditeur']);
 
+			require_once File::buildPath(array('model','modelLogement.php'));
+			$listLogement = ModelLogement::readOrFalse($where, $values);
+
 			$editeur = $editeur[0];
 			$title = $editeur->nomEditeur;
 
@@ -146,6 +149,15 @@
 				$error = 'Impossible de modifier l\'éditeur';
 				require_once File::buildPath(array('view', 'view.php'));
 				return false;
+			}
+
+			if ($editeur->nomEditeur != $editeurFound[0]->nomEditeur) {
+				$nomEditeurUnique = $editeur->isNomEditeurUnique();
+				if (!$nomEditeurUnique) {
+					$error = 'Un éditeur possède déjà ce nom';
+					require_once File::buildPath(array('view', 'view.php'));
+					return false;
+				}
 			}
 
 			$info = 'Editeur mis à jour';

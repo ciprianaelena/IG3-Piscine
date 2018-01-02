@@ -66,7 +66,7 @@
 
 					require_once File::buildPath(array('controller', 'controllerEditeur.php'));
 					$error = "Veuillez selectionner un représentant valide en passant par l'éditeur";
-					ControllerEditeur::readAll('', $error);
+					ControllerEditeur::readAll(NULL, $error);
 
 				} else {
 					$representant = $representant[0];
@@ -75,7 +75,7 @@
 			} else {
 				require_once File::buildPath(array('controller', 'controllerEditeur.php'));
 				$error = "Veuillez selectionner un représentant valide en passant par l'éditeur";
-				ControllerEditeur::readAll('', $error);
+				ControllerEditeur::readAll(NULL, $error);
 			}
 
 			require_once File::buildPath(array('view', 'view.php'));

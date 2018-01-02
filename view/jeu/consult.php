@@ -76,8 +76,7 @@
 	</ul>
 
 	<?php if(isset($jeu)){ ?>
-		<a href="/index.php?controller=jeu&action=viewUpdate&idJeu=<?php $jeu->echo('idJeu')?>">Modifier <?php $jeu->echo('nomJeu') ?> </a>
-
-		<a href="/index.php?controller=jeu&action=actionDelete&idJeu=<?php $jeu->echo('idJeu') ?>">Supprimer</a>
+		<p><a href="/index.php?controller=jeu&action=viewUpdate&idJeu=<?php $jeu->echo('idJeu')?>">Modifier <?php $jeu->echo('nomJeu') ?> </a></p>
+		<p><a href="/index.php?controller=jeu&action=actionDelete&idJeu=<?php $jeu->echo('idJeu') ?>">Supprimer</a></p>
 	<?php }?>
 </div>

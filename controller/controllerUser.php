@@ -31,9 +31,11 @@
 			}
 			
 			// Add the user in the database
+			$user->password = Usefull::crypt($user->password);
 			$user->create();
+			$user->password = NULL;
 			$view = 'connect';
-			$title = 'Connection';
+			$title = 'Connexion';
 			$info = 'Register successfull';
 			require_once File::buildPath(array('view', 'view.php'));
 		}
@@ -42,7 +44,7 @@
 		public static function viewConnect($error = NULL) {
 			$controller = 'user';
 			$view = 'connect';
-			$title = 'Connection';
+			$title = 'Connexion';
 
 			require_once File::buildPath(array('view', 'view.php'));
 		}
@@ -51,10 +53,11 @@
 		public static function actionConnect() {
 			$controller = 'user';
 			$view = 'connect';
-			$title = 'Connect';
+			$title = 'Connexion';
 
 			$user = new ModelUser();
 			$user->setArray($_POST);
+			$user->password = Usefull::crypt($user->password);
 
 			try {
 				$userFound = $user->checkConnect();
@@ -78,8 +81,9 @@
 			// Else, connect the user
 			$user = $userFound[0];
 			$user->connect();
-			$info = 'Connected';
-			require_once File::buildPath(array('view', 'view.php'));
+			
+			require_once File::buildPath(array('controller', 'controllerEditeur.php'));
+			ControllerEditeur::readAll('Connexion réussi');
 		}
 		
 		// Disconnect a user

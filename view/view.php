@@ -20,6 +20,7 @@
 			<ul>
 				<li><a href="/index.php?controller=user&action=viewConnect">Home</a></li>
 				<?php if (isConnected()): ?>
+					<li><a href="/index.php?controller=festival&action=readAll">Festival</a></li>
 					<li><a href="/index.php?controller=editeur&action=readAll">Editeur</a></li>
 					<li><a href="/index.php?controller=jeu&action=readAll">Jeux</a></li>
 					<li><a href="/index.php?controller=user&action=actionDisconnect">Disconnect</a></li>
@@ -28,20 +29,6 @@
 					<li><a href="/index.php?controller=user&action=viewRegister">Register</a></li>
 				<?php endif ?>
 			</ul>
-
-			<?php if (isConnected()): ?>
-				<select>
-					<?php
-						require_once File::buildPath(array('model', 'modelFestival.php'));
-						$listFestival = ModelFestival::read();
-						foreach ($listFestival as $festival) {
-							?>
-								<option><?php $festival->echo('anneeFestival') ?></option>
-							<?php
-						}
-					?>
-				</select>
-			<?php endif; ?>
 		</header>
 
 
