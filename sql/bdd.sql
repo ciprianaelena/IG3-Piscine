@@ -329,6 +329,12 @@ ALTER TABLE `zone`
 
 -- MODIFICATIONS
 
+-- Changement du type de la clé anneFestival
+ALTER TABLE `festival` CHANGE `anneeFestival` `anneeFestival` INT NOT NULL;
+ALTER TABLE `festival` ADD `idFestival` INT UNSIGNED NOT NULL FIRST;
+ALTER TABLE `festival` DROP PRIMARY KEY, ADD PRIMARY KEY(`idFestival`);
+ALTER TABLE `festival` CHANGE `idFestival` `idFestival` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 -- Ajout de la clé étrangère pour le représentant
 ALTER TABLE `representant` ADD `idEditeur` INT(10) UNSIGNED NOT NULL AFTER `idRepresentant`;
 ALTER TABLE `representant` ADD CONSTRAINT `fkRepresentantEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -342,17 +348,13 @@ ALTER TABLE `jeu` CHANGE `largeur` `largeur` INT(11) NULL, CHANGE `hauteur` `hau
 ALTER TABLE `jeu` ADD `idEditeur` INT(10) UNSIGNED NOT NULL AFTER `idJeu`;
 ALTER TABLE `jeu` ADD CONSTRAINT `fkJeuEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- Ajout de la clé étrangère idEditeur pour le suivi contact
+-- Ajout de la clé étrangère idEditeur pour le suiviContact
 ALTER TABLE `suiviContact` ADD `idEditeur` INT(10) UNSIGNED NOT NULL AFTER `idContact`;
 ALTER TABLE `suiviContact` ADD CONSTRAINT `fksuiviContactEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- Ajout de la clé étrangère idRepresentant pour le suivi contact
-ALTER TABLE `suiviContact` ADD `idRepresentant` INT(10) UNSIGNED NOT NULL AFTER `idEditeur`;
+ALTER TABLE `suiviContact` ADD `idRepresentant` BIGINT(20) UNSIGNED NOT NULL AFTER `idEditeur`;
 ALTER TABLE `suiviContact` ADD CONSTRAINT `fksuiviContactRepresentant` FOREIGN KEY (`idRepresentant`) REFERENCES `representant`(`idRepresentant`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- Ajout de la clé étrangère idEditeur dans la table suiviContact
-ALTER TABLE `suivicontact` ADD `idEditeur` INT(10) UNSIGNED NOT NULL AFTER `idContact`;
-ALTER TABLE `suivicontact` ADD CONSTRAINT `fkSuiviContactEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- Ajout de la clé étrangère idEditeur dans la table des factures
 ALTER TABLE `facture` ADD `idEditeur` INT UNSIGNED NOT NULL AFTER `idFacture`;
@@ -366,9 +368,3 @@ ALTER TABLE `logement` ADD `idFestival` INT UNSIGNED NOT NULL AFTER `idEditeur`;
 ALTER TABLE `logement` ADD CONSTRAINT `fkLogementFestival` FOREIGN KEY (`idFestival`) REFERENCES `festival`(`idFestival`) ON DELETE CASCADE ON UPDATE CASCADE;
 -- Les colonnes coutParNuit et nbPlace peuvent être nulles dans la table logements
 ALTER TABLE `logement` CHANGE `coutParNuit` `coutParNuit` INT(11) NULL, CHANGE `nbPlace` `nbPlace` INT(11) NULL;
-
--- Changement du type de la clé anneFestival
-ALTER TABLE `festival` CHANGE `anneeFestival` `anneeFestival` INT NOT NULL;
-ALTER TABLE `festival` ADD `idFestival` INT UNSIGNED NOT NULL FIRST;
-ALTER TABLE `festival` DROP PRIMARY KEY, ADD PRIMARY KEY(`idFestival`);
-ALTER TABLE `festival` CHANGE `idFestival` `idFestival` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;
