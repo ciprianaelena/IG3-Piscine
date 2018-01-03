@@ -6,7 +6,7 @@
 		static protected $className = 'ModelJeu';
 		static protected $tableName = 'jeu';
 
-		// Retourne un editeur par son ID
+		// Retourne un jeu par son ID
 		public static function getID($id) {
 			$where = 'idJeu = :idJeu';
 			$values = array('idJeu' => $id);
@@ -14,7 +14,7 @@
 		}
 
 		private function isNumericSet() {
-			
+
 		}
 	}
 ?>

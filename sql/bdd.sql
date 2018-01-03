@@ -368,3 +368,28 @@ ALTER TABLE `logement` ADD `idFestival` INT UNSIGNED NOT NULL AFTER `idEditeur`;
 ALTER TABLE `logement` ADD CONSTRAINT `fkLogementFestival` FOREIGN KEY (`idFestival`) REFERENCES `festival`(`idFestival`) ON DELETE CASCADE ON UPDATE CASCADE;
 -- Les colonnes coutParNuit et nbPlace peuvent être nulles dans la table logements
 ALTER TABLE `logement` CHANGE `coutParNuit` `coutParNuit` INT(11) NULL, CHANGE `nbPlace` `nbPlace` INT(11) NULL;
+
+
+-- Ajout de la clé étrangère idEditeur pour le Suivi Colis
+ALTER TABLE `suiviColis` ADD `idEditeur` int(10) UNSIGNED NOT NULL AFTER `idColis`;
+ALTER TABLE `suiviColis` ADD CONSTRAINT `fksuiviColisEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- la colonne dateReception peut etre null
+ALTER TABLE `suiviColis` CHANGE `dateReception` `dateReception` INT(11) NULL;
+
+-- Création de l'entité Contenir, concernant les colis et les jeux
+
+  CREATE TABLE `contenir` (
+    `idContenir` bigint(20) UNSIGNED NOT NULL,
+    `idColis` bigint(20) UNSIGNED NOT NULL,
+    `idJeu` bigint(20) UNSIGNED NOT NULL,
+    `quantite` int(10) UNSIGNED NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+  ALTER TABLE `contenir`
+    ADD PRIMARY KEY (`idContenir`);
+
+  ALTER TABLE `contenir` ADD CONSTRAINT `fkcontenirJeu` FOREIGN KEY (`idJeu`) REFERENCES `jeu`(`idJeu`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+  ALTER TABLE `contenir` ADD CONSTRAINT `fkcontenirColis` FOREIGN KEY (`idColis`) REFERENCES `suiviColis`(`idColis`) ON DELETE CASCADE ON UPDATE CASCADE;
+
