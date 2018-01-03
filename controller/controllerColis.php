@@ -119,29 +119,29 @@
 			unset($contact->idEditeur);
 			$contact->update();
 			self::consult($contact->idContact,$info);
-		}
+		}*/
 
 		public static function actionDelete() {
 			require_once File::buildPath(array('controller', 'controllerEditeur.php'));
 
-			if (!isset($_GET['idContact'])) {
-				$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
-				ControllerEditeur::readAll('', $error);
+			if (!isset($_GET['idColis'])) {
+				$error = "Veuillez selectionner un colis valide en passant par l'éditeur";
+				ControllerEditeur::readAll(NULL, $error);
 				return false;
 			}
 
-			$contactFound = ModelContact::getID($_GET['idContact']);
-			if (!$contactFound) {
+			$colisFound = ModelColis::getID($_GET['idColis']);
+			if (!$colisFound) {
 				$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
-				ControllerEditeur::readAll('', $error);
+				ControllerEditeur::readAll(NULL, $error);
 				return false;
 			}
 
-			$contact = $contactFound[0];
-			$contact->delete();
+			$colis = $colisFound[0];
+			$colis->delete();
 
-			ControllerEditeur::consult($contact->idEditeur, 'Contact supprimé');
-		}*/
+			ControllerEditeur::consult($colis->idEditeur, 'Colis supprimé');
+		}
 
 		public static function consult($idColis = NULL, $info = "") {
 			$controller = 'colis';

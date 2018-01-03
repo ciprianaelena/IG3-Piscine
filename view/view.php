@@ -23,6 +23,7 @@
 					<li><a href="/index.php?controller=festival&action=readAll">Festival</a></li>
 					<li><a href="/index.php?controller=editeur&action=readAll">Editeur</a></li>
 					<li><a href="/index.php?controller=jeu&action=readAll">Jeux</a></li>
+					<li><a href="/index.php?controller=colis&action=readAll">Colis</a></li>
 					<li><a href="/index.php?controller=user&action=actionDisconnect">Disconnect</a></li>
 				<?php else: ?>
 					<li><a href="/index.php?controller=user&action=viewConnect">Log in</a></li>

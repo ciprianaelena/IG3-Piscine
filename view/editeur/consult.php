@@ -131,3 +131,29 @@
 		?>
 
 </div>
+
+<!-- Affichage des colis de l'éditeur -->
+<div>
+
+	<h2>Colis</h2>
+
+		<a href="/index.php?controller=colis&action=viewCreate&idEditeur=<?php if (isset($editeur)): $editeur->echo('idEditeur'); endif; ?>">Ajouter un colis</a>
+
+		<?php if (!$listColis): ?>
+			<p> Aucun colis </p>
+		<?php
+			else:
+				foreach ($listColis as $colis) {
+		?>
+
+			<p>
+				<a href="/index.php?controller=colis&action=consult&idColis=<?php $colis->echo('idColis') ?>"><?php echo("Colis n°".$colis->idColis) ?></a>
+				<a href="/index.php?controller=colis&action=actionDelete&idColis=<?php $colis->echo('idColis') ?>">Supprimer</a>
+			</p>
+
+		<?php
+				}
+			endif;
+		?>
+
+</div>

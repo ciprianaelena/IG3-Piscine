@@ -80,6 +80,9 @@
 			require_once File::buildPath(array('model','modelLogement.php'));
 			$listLogement = ModelLogement::readOrFalse($where, $values);
 
+			require_once File::buildPath(array('model','modelColis.php'));
+			$listColis = ModelColis::readOrFalse($where, $values);
+
 			$editeur = $editeur[0];
 			$title = $editeur->nomEditeur;
 
