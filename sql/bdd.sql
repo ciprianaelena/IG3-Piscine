@@ -375,7 +375,9 @@ ALTER TABLE `suiviColis` ADD `idEditeur` int(10) UNSIGNED NOT NULL AFTER `idColi
 ALTER TABLE `suiviColis` ADD CONSTRAINT `fksuiviColisEditeur` FOREIGN KEY (`idEditeur`) REFERENCES `editeur`(`idEditeur`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- la colonne dateReception peut etre null
-ALTER TABLE `suiviColis` CHANGE `dateReception` `dateReception` INT(11) NULL;
+ALTER TABLE `suiviColis` CHANGE `dateReception` `dateReception` date NULL;
+-- la colonne dateEnvoi est de type date (non pas int)
+ALTER TABLE `suiviColis` CHANGE `dateEnvoi` `dateEnvoi` date NOT NULL;
 
 -- Création de l'entité Contenir, concernant les colis et les jeux
 
