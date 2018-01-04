@@ -137,7 +137,7 @@
 
 	<h2>Colis</h2>
 
-		<a href="/index.php?controller=colis&action=viewCreate&idEditeur=<?php if (isset($editeur)): $editeur->echo('idEditeur'); endif; ?>">Ajouter un colis</a>
+		<a href="/index.php?controller=colis&action=viewCreateColis&idEditeur=<?php if (isset($editeur)): $editeur->echo('idEditeur'); endif; ?>">Ajouter un colis</a>
 
 		<?php if (!$listColis): ?>
 			<p> Aucun colis </p>

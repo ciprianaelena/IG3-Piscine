@@ -381,17 +381,23 @@ ALTER TABLE `suiviColis` CHANGE `dateEnvoi` `dateEnvoi` date NOT NULL;
 
 -- Création de l'entité Contenir, concernant les colis et les jeux
 
-  CREATE TABLE `contenir` (
-    `idContenir` bigint(20) UNSIGNED NOT NULL,
-    `idColis` bigint(20) UNSIGNED NOT NULL,
-    `idJeu` bigint(20) UNSIGNED NOT NULL,
-    `quantite` int(10) UNSIGNED NOT NULL
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `contenir` (
+  `idContenir` bigint(20) UNSIGNED NOT NULL,
+  `idColis` bigint(20) UNSIGNED NOT NULL,
+  `idJeu` bigint(20) UNSIGNED NOT NULL,
+  `quantite` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-  ALTER TABLE `contenir`
-    ADD PRIMARY KEY (`idContenir`);
+ALTER TABLE `contenir`
+  ADD PRIMARY KEY (`idContenir`);
 
-  ALTER TABLE `contenir` ADD CONSTRAINT `fkcontenirJeu` FOREIGN KEY (`idJeu`) REFERENCES `jeu`(`idJeu`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `contenir` ADD CONSTRAINT `fkcontenirJeu` FOREIGN KEY (`idJeu`) REFERENCES `jeu`(`idJeu`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-  ALTER TABLE `contenir` ADD CONSTRAINT `fkcontenirColis` FOREIGN KEY (`idColis`) REFERENCES `suiviColis`(`idColis`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `contenir` ADD CONSTRAINT `fkcontenirColis` FOREIGN KEY (`idColis`) REFERENCES `suiviColis`(`idColis`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE `contenir` ADD `renvoyer` tinyint(1) NOT NULL AFTER `quantite`;
+
+-- AUTO_INCREMENT pour la table `contenir`
+--
+ALTER TABLE `contenir`
+  MODIFY `idContenir` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;

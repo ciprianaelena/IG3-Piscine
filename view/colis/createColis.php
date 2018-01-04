@@ -12,7 +12,7 @@
 
 <h1>Créer un colis</h1>
 
-<form method='post' action='index.php?controller=colis&action=actionCreate'>
+<form method='post' action='index.php?controller=colis&action=actionCreateColis'>
 
 	<input type="hidden" name="idColis" value="<?php if (isset($colis)): $colis->echo('idColis'); endif; ?>" />
 

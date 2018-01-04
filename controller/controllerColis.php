@@ -1,5 +1,6 @@
 <?php
 	require_once File::buildPath(array('model', 'modelColis.php'));
+	require_once File::buildPath(array('model', 'modelContenir.php'));
 
 	class ControllerColis {
 
@@ -13,9 +14,9 @@
 			require_once File::buildPath(array('view', 'view.php'));
 		}
 
-		public static function viewCreate($colis = NULL, $error = NULL) {
+		public static function viewCreateColis($colis = NULL, $error = NULL) {
 			$controller = 'colis';
-			$view = 'create';
+			$view = 'createColis';
 			$title = 'Créer un colis';
 
 			require_once File::buildPath(array('model', 'modelEditeur.php'));
@@ -28,6 +29,47 @@
 			}
 
 			require_once File::buildPath(array('view', 'view.php'));
+		}
+
+		public static function viewCreateContenir($colis = NULL, $contenir = NULL, $info = NULL, $error = NULL){
+			$controller = 'colis';
+			$view = 'createContenir';
+			$title = 'Créer un colis';
+
+			if(!is_null($colis)){
+				$_GET['idColis'] = $colis->idColis;
+			}
+
+			if(!isset($_GET['idColis'])){
+				self::readAll(NULL,'Veuillez passer par le colis pour ajouter un jeu');
+				return false;
+			} else {
+				$colisFound = ModelColis::getID($_GET['idColis']);
+				if(!$colisFound){
+					self::readAll(NULL,'Veuillez passer par le colis pour ajouter un jeu');
+					return false;
+				} else {
+					$colis = $colisFound[0];
+				}
+			}
+
+			require_once File::buildPath(array('model', 'modelEditeur.php'));
+			$editeurFound = ModelEditeur::getID($colis->idEditeur);
+			if (!$editeurFound) {
+				require_once File::buildPath(array('controller', 'controllerColis.php'));
+
+				self::viewCreateColis($colis, 'Colis incorrect');
+				return false;
+			}
+
+			$editeur = $editeurFound[0];
+			$where = 'idEditeur = :idEditeur';
+			$values = array('idEditeur' => $editeur->idEditeur);
+
+			require_once File::buildPath(array('model','modelJeu.php'));
+			$listJeu = ModelJeu::readOrFalse($where,$values);
+
+			require_once File::buildPath(array('view','view.php'));
 		}
 
 /*		public static function viewUpdate() {
@@ -63,7 +105,7 @@
 			require_once File::buildPath(array('view', 'view.php'));
 		}*/
 
-		public static function actionCreate() {
+		public static function actionCreateColis() {
 			$controller = 'colis';
 			$colis = new ModelColis();
 
@@ -86,17 +128,56 @@
 			$colis->create();
 
 			//Temporaire
-			$info = 'Nouveau colis créé';
-			self::consult($colis->idColis,$info);
+			//$info = 'Nouveau colis créé';
+			//self::consult($colis->idColis,$info);
 			//Fin du Temporaire
 
 
 			//Ici on doit renvoyer vers le remplissage du colis.
-			//require_once File::buildPath(array('controller', 'controllerContenir.php'));
 			$info = "Le colis a été créé. Quel jeu contient-il ?";
-			//ControllerContenir::viewCreate($colis,$info);
+			self::viewCreateContenir($colis,NULL,$info);
 		}
 
+		public static function actionCreateContenir() {
+			$controller = 'contenir';
+			$contenir = new ModelContenir();
+			if (isset($_POST['(int)renvoyer'])) {
+				$_POST['(int)actifEditeur'] = 1;
+			} else {
+				$_POST['(int)renvoyer'] = 0;
+			}
+
+			$contenir->setArrayType($_POST);
+
+			//Obtention du colis
+			$colisFound = ModelColis::getID($contenir->idColis);
+			if (!$colisFound) {
+				static::viewCreateColis(NULL,'Le colis est introuvable');
+				return false;
+			} else {
+				$colis = $colisFound[0];
+			}
+
+			if (!isset($_POST['(int)idJeu'])) {
+				static::viewCreateContenir($colis,$contenir,NULL, 'Le champ jeu est obligatoire');
+				return false;
+			}
+
+			require_once File::buildPath(array('model', 'modelJeu.php'));
+			$jeuFound = ModelJeu::getID($contenir->idJeu);
+			if (!$jeuFound) {
+				static::viewCreateContenir($colis,$contenir,NULL,'L\'éditeur est introuvable');
+				return false;
+			}
+
+			unset($contenir->idContenir);
+
+			$contenir->create();
+
+			//Ici on doit renvoyer vers le remplissage du colis.
+			$info = "Le jeu a été ajouté";
+			self::consult($colis->idColis,$info);
+		}
 /*		public static function actionUpdate() {
 			$controller = 'contact';
 
@@ -121,7 +202,7 @@
 			self::consult($contact->idContact,$info);
 		}*/
 
-		public static function actionDelete() {
+		public static function actionDeleteColis() {
 			require_once File::buildPath(array('controller', 'controllerEditeur.php'));
 
 			if (!isset($_GET['idColis'])) {
@@ -138,10 +219,47 @@
 			}
 
 			$colis = $colisFound[0];
+
+			//Il faut supprimer les contenirs de ce colis avant de le supprimer completement
+			//On récupère la liste des "contenirs" lié à ce colis
+			$where = 'idColis = :idColis';
+			$values = array('idColis' => $colis->idColis);
+
+			require_once File::buildPath(array('model','modelContenir.php'));
+			$listContenir = ModelContenir::readOrFalse($where,$values);
+
+			foreach($listContenir as $contenir){
+				$contenir->delete();
+			}
 			$colis->delete();
 
 			ControllerEditeur::consult($colis->idEditeur, 'Colis supprimé');
 		}
+
+		public static function actionDeleteContenir() {
+			if (!isset($_GET['idContenir'])) {
+				$error = "Erreur";
+				self::readAll(NULL, $error);
+				return false;
+			}
+
+			$contenirFound = ModelContenir::getID($_GET['idContenir']);
+			if (!$contenirFound) {
+				$error = "Erreur";
+				self::readAll(NULL, $error);
+				return false;
+			}
+
+
+			$contenir = $contenirFound[0];
+
+			/*require_once File::buildPath(array('model','modelColis.php'));
+			$colis = ModelColis::getID($contenir->idColis)[0];*/
+			$contenir->delete();
+			self::consult($contenir->idColis, 'Jeu retiré du colis');
+		}
+
+
 
 		public static function consult($idColis = NULL, $info = "") {
 			$controller = 'colis';
@@ -171,12 +289,18 @@
 					}
 				}
 
+				//On récupère la liste des "contenirs" lié à ce colis
+				$where = 'idColis = :idColis';
+				$values = array('idColis' => $colis->idColis);
+
+				require_once File::buildPath(array('model','modelContenir.php'));
+				$listContenir = ModelContenir::readOrFalse($where,$values);
+
 			} else {
 				$error = "Veuillez sélectionner un colis";
 			}
 
 			require_once File::buildPath(array('view', 'view.php'));
-
 
 		}
 

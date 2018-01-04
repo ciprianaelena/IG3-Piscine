@@ -14,7 +14,7 @@
 
     <h1>Liste des colis</h1>
 
-    <a href="/index.php?controller=colis&action=viewCreate">Ajouter un colis</a>
+    <a href="/index.php?controller=colis&action=viewCreateColis">Ajouter un colis</a>
     <?php if (!$listColis): ?>
         <p> Aucun colis </p>
     <?php
