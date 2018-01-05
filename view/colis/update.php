@@ -10,7 +10,7 @@
 	</p>
 <?php endif; ?>
 
-<h1>Créer un contact</h1>
+<h1>Modifier un colis</h1>
 
 <p>
 	Editeur :
@@ -20,55 +20,24 @@
 	<?php endif; ?>
 </p>
 
-<form method='post' action='index.php?controller=contact&action=actionUpdate'>
+<form method='post' action='index.php?controller=colis&action=actionUpdate'>
 
-	<input type="hidden" name="idEditeur" value="<?php if (isset($editeur)): $editeur->echo('idEditeur'); endif; ?>">
-	<input type="hidden" name="idContact" value="<?php if (isset($contact)): $contact->echo('idContact'); endif; ?>">
+	<input type="hidden" name="idColis" value="<?php if (isset($colis)): $colis->echo('idColis'); endif; ?>" />
 
-	<p> Représentant :
-		<?php if (empty($listRepresentant)): ?>
-			Aucun représentant existant. Veuillez en <a href="/index.php?controller=representant&action=viewCreate&idEditeur=<?php $editeur->echo('idEditeur') ?>">créer</a> un.
-		<?php else: ?>
-			<select name="idRepresentant">
-				<?php foreach ($listRepresentant as $repr) {
-						 $id = $repr->idRepresentant; ?>
-						<option <?php if($id == $contact->idRepresentant) : echo('selected'); endif;?> value="<?php echo($id);?>"><?php echo($repr->prenomRepresentant.' '.$repr->nomRepresentant);?></option>
-				<?php } ?>
-			</select>
-		<?php endif; ?>
-
+	<p>
+		Date d'envoi
+		<input type="date" name="(null)dateEnvoi" placeholder="AAAA-MM-JJ" value="<?php if (isset($colis)): $colis->echo('dateEnvoi'); else: echo(date("Y-m-d")); endif; ?>" required/>
 	</p>
 
 
 	<p>
-		Type de contact <input type="text" placeholder="Mail / Appel / SMS ..." name="typeContact" value="<?php if (isset($contact)): $contact->echo('typeContact'); endif; ?>" required />
+		Date de reception
+		<input type="date" name="(null)dateReception" placeholder="AAAA-MM-JJ"  value="<?php if (isset($colis)): $colis->echo('dateReception'); endif; ?>"/>
 	</p>
 
 	<p>
-		Date du contact <input type="date" placeholder="AAAA-MM-JJ" name="dateContact" value="<?php if (isset($contact)): $contact->echo('dateContact'); endif; ?>" required />
-	</p>
-
-	<p>
-		Date de relance <input type="date" placeholder="AAAA-MM-JJ" name="dateRelance" value="<?php if (isset($contact)): $contact->echo('dateRelance'); endif; ?>" />
-	</p>
-
-
-	<p>
-		<textarea type="text" placeholder="Commentaires"
-		name="commentaireContact"><?php if (isset($contact)): $contact->echo('commentaireContact'); endif; ?></textarea>
-	</p>
-
-	<p>
-		<input type="checkbox" placeholder="Clos" name="clos"
-			<?php
-				if (isset($contact)) {
-					if ($contact->clos) {
-						echo "checked";
-					}
-				}
-			?>
-		/>
-		Clos
+		<textarea placeholder="Commentaires"
+		name="commentaire"><?php if (isset($colis)): $colis->echo('commentaire'); endif; ?></textarea>
 	</p>
 
 	<p><input type="submit" value="Modifier" /></p>

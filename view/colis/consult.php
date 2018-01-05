@@ -69,8 +69,8 @@
     <?php if(isset($colis)){ ?>
         <a href="/index.php?controller=colis&action=viewCreateContenir&idColis= <?php $colis->echo('idColis');?>">Ajouter un jeu à ce colis </a>
 
-        <a href="/index.php?controller=colis&action=viewUpdate&idColis= <?php $colis->echo('idColis');?>">Modifier ce colis </a>
+        <a href="/index.php?controller=colis&action=viewUpdate&idColis=<?php $colis->echo('idColis');?>">Modifier ce colis </a>
 
-        <a href="/index.php?controller=colis&action=actionDeleteColis&idColis=<?php $colis->echo('idColis') ?>">Supprimer</a>
+        <a href="/index.php?controller=colis&action=actionDeleteColis&idColis=<?php $colis->echo('idColis')?>">Supprimer</a>
     <?php }?>
 </div>

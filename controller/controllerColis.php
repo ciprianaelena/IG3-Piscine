@@ -72,38 +72,36 @@
 			require_once File::buildPath(array('view','view.php'));
 		}
 
-/*		public static function viewUpdate() {
-			$controller = 'contact';
+		public static function viewUpdate() {
+			$controller = 'colis';
 			$view = 'update';
-			$title = 'Modifier un contact';
+			$title = 'Modifier un colis';
 
 			require_once File::buildPath(array('controller', 'controllerEditeur.php'));
-			//On vérifie que le contact est donné et existe
-			if (isset($_GET['idContact'])) {
-				$where = 'idContact = :idContact';
-				$values = array('idContact' => $_GET['idContact']);
-				$contact = ModelContact::readOrFalse($where, $values);
-				if (!$contact) {
-					unset($contact);
-					$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
+			//On vérifie que le colis est donné et existe
+			if (isset($_GET['idColis'])) {
+				$where = 'idColis = :idColis';
+				$values = array('idColis' => $_GET['idColis']);
+				$colis = ModelColis::readOrFalse($where, $values);
+				if (!$colis) {
+					unset($colis);
+					$error = "Veuillez selectionner un colis valide en passant par l'éditeur";
 					ControllerEditeur::readAll('', $error);
 
 				} else {
-					$contact = $contact[0];
-					//Une fois le contact trouvé, on extrait l'éditeur et sa liste de représentant
-					$editeur = ModelEditeur::getID($contact->idEditeur);
+					$colis = $colis[0];
+					//Une fois le colis trouvé, on extrait l'éditeur et sa liste de représentant
+					$editeur = ModelEditeur::getID($colis->idEditeur);
 					$editeur = $editeur[0];
-					require_once File::buildPath(array('controller', 'controllerRepresentant.php'));
-					$listRepresentant = ModelRepresentant::readAll($editeur->idEditeur);
 				}
 			} else {
-				$error = "Veuillez selectionner un contact valide en passant par l'éditeur";
+				$error = "Veuillez selectionner un colis valide en passant par l'éditeur";
 				ControllerEditeur::readAll('', $error);
 
 			}
 
 			require_once File::buildPath(array('view', 'view.php'));
-		}*/
+		}
 
 		public static function actionCreateColis() {
 			$controller = 'colis';
@@ -126,12 +124,6 @@
 
 			unset($colis->idColis);
 			$colis->create();
-
-			//Temporaire
-			//$info = 'Nouveau colis créé';
-			//self::consult($colis->idColis,$info);
-			//Fin du Temporaire
-
 
 			//Ici on doit renvoyer vers le remplissage du colis.
 			$info = "Le colis a été créé. Quel jeu contient-il ?";
@@ -178,29 +170,25 @@
 			$info = "Le jeu a été ajouté";
 			self::consult($colis->idColis,$info);
 		}
-/*		public static function actionUpdate() {
-			$controller = 'contact';
 
-			$contact = new ModelContact();
-			if (isset($_POST['clos'])) {
-				$_POST['clos'] = 1;
-			} else {
-				$_POST['clos'] = 0;
-			}
-			$contact->setArray($_POST);
+		public static function actionUpdate() {
+			$controller = 'colis';
 
-			$contactFound = ModelContact::getID($contact->idContact);
-			if (!$contactFound) {
-				$error = 'Impossible de modifier le contact';
+			$colis = new ModelColis();
+			$colis->setArrayType($_POST);
+
+			$colisFound = ModelColis::getID($colis->idColis);
+			if (!$colisFound) {
+				$error = 'Impossible de modifier le colis';
 				require_once File::buildPath(array('view', 'view.php'));
 				return false;
 			}
 
-			$info = 'Représentant mis à jour';
-			unset($contact->idEditeur);
-			$contact->update();
-			self::consult($contact->idContact,$info);
-		}*/
+			$info = 'Colis mis à jour';
+			unset($colis->idEditeur);
+			$colis->update();
+			self::consult($colis->idColis,$info);
+		}
 
 		public static function actionDeleteColis() {
 			require_once File::buildPath(array('controller', 'controllerEditeur.php'));
