@@ -24,7 +24,7 @@
 
         <p>
             <a href="/index.php?controller=colis&action=consult&idColis=<?php $colis->echo('idColis') ?>"><?php echo("Colis n°".$colis->idColis)?></a>
-            <a href="/index.php?controller=colis&action=actionDelete&idColis=<?php $colis->echo('idColis') ?>">Supprimer</a>
+            <a href="/index.php?controller=colis&action=actionDeleteColis&idColis=<?php $colis->echo('idColis') ?>">Supprimer</a>
         </p>
 
     <?php
